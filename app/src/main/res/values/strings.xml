@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">SIGA</string>
+    <string name="default_presentation_message">Tudo que você precisa para ter uma vida acadêmica produtiva</string>
+    <string name="default_welcome_message">Bem vindo de volta!\nO que você vai fazer hoje?</string>
+    <string name="login_button">Login</string>
+</resources>

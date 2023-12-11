@@ -1,0 +1,4 @@
+primary = 1F41BB
+secondary = F1F4FF
+tertiary = ac85a2 // Default
+neutral = 919094 // Default
