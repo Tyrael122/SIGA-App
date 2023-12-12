@@ -1,12 +1,16 @@
 package com.makesoftware.siga.ui.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -17,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -27,6 +32,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -47,23 +53,46 @@ fun UserScreen() {
     var selectedIndex by remember { mutableIntStateOf(0) }
 
     val items = listOf(
-        NavigationItem(label = "Home", onClick = { /* TODO */ }),
-        NavigationItem(label = "Cursos", onClick = { /* TODO */ }),
+        NavigationItem(label = "Home", onClick = { /* TODO */ }, icon = {
+            Icon(
+                Icons.Outlined.Home,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.size(30.dp)
+            )
+        }),
+        NavigationItem(label = "Cursos", onClick = { /* TODO */ }, icon = {
+            Icon(
+                Icons.Outlined.Home,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.size(30.dp)
+            )
+        }),
+        NavigationItem(label = "Matérias", onClick = { /* TODO */ }, icon = {
+            Icon(
+                Icons.Outlined.Home,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.size(30.dp)
+            )
+        })
     )
 
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
         ModalDrawerSheet(
             drawerShape = RectangleShape,
+            modifier = Modifier.widthIn(max = 300.dp),
         ) {
-            DefaultNavigationIcon(modifier = Modifier.padding(top = 8.dp, start = 12.dp)) {
-                scope.launch {
-                    drawerState.close()
-                }
-            }
+            UserInfo(modifier = Modifier.padding(top = 20.dp, bottom = 45.dp))
 
             items.forEachIndexed { index, item ->
-                NavigationDrawerItem(
-                    label = { Text(text = item.label) },
+                NavigationDrawerItem(label = {
+                    Text(
+                        text = item.label,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                },
                     icon = item.icon,
                     selected = index == selectedIndex,
                     onClick = {
@@ -73,12 +102,42 @@ fun UserScreen() {
                         }
                         item.onClick()
                     },
-                    shape = RectangleShape
+                    shape = RoundedCornerShape(10.dp),
+                    colors = NavigationDrawerItemDefaults.colors(
+                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    ),
+                    modifier = Modifier.padding(horizontal = 25.dp, vertical = 10.dp)
                 )
             }
         }
     }) {
         UserScreenContent(items[selectedIndex].label, drawerState = drawerState)
+    }
+}
+
+@Composable
+fun UserInfo(modifier: Modifier = Modifier) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.fillMaxWidth()
+    ) {
+        Icon(
+            Icons.Filled.AccountCircle,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(100.dp)
+        )
+
+        Text(
+            text = "Kauan Martins",
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(top = 10.dp)
+        )
+
+        Text(
+            text = "Coordenador",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Normal,
+        )
     }
 }
 
@@ -126,15 +185,6 @@ fun DefaultTopAppBar(
         title()
     }, navigationIcon = {
         DefaultNavigationIcon(modifier = Modifier.padding(start = 8.dp), onNavigationIconClick)
-    }, actions = {
-        IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(end = 8.dp)) {
-            Icon(
-                Icons.Filled.AccountCircle,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(50.dp)
-            )
-        }
     }, modifier = modifier
     )
 }
