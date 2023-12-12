@@ -8,14 +8,16 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.makesoftware.siga.ui.home.UserScreen
 import com.makesoftware.siga.ui.login.LoginFormScreen
-import com.makesoftware.siga.ui.login.LoginScreen
+import com.makesoftware.siga.ui.login.WelcomeScreen
 import com.makesoftware.siga.ui.theme.SIGATheme
 
 class Routes {
     companion object {
         const val LOGIN_FORM = "loginform"
-        const val LOGIN = "login"
+        const val WELCOME_SCREEN = "WelcomeScreen"
+        const val HOME = "Home"
     }
 }
 
@@ -27,9 +29,9 @@ fun SIGAApp(modifier: Modifier = Modifier) {
         ) {
             val navController = rememberNavController()
 
-            NavHost(navController = navController, startDestination = Routes.LOGIN_FORM) {
-                composable(Routes.LOGIN) {
-                    LoginScreen(onLogin = {
+            NavHost(navController = navController, startDestination = Routes.HOME) {
+                composable(Routes.WELCOME_SCREEN) {
+                    WelcomeScreen(onLogin = {
                         navController.navigate(Routes.LOGIN_FORM)
                     })
                 }
@@ -37,14 +39,19 @@ fun SIGAApp(modifier: Modifier = Modifier) {
                 composable(Routes.LOGIN_FORM) {
                     LoginFormScreen(
                         onPasswordReset = {
-                            navController.navigate(Routes.LOGIN) // TODO: Navigate to password reset
+                            navController.navigate(Routes.HOME) // TODO: Navigate to password reset
                         },
                         onLogin = {
-                            navController.navigate(Routes.LOGIN) // TODO: Navigate to home
+                            navController.navigate(Routes.HOME) // TODO: Navigate to home
                         }
                     )
+                }
+
+                composable(Routes.HOME) {
+                    UserScreen()
                 }
             }
         }
     }
 }
+

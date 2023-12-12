@@ -1,0 +1,154 @@
+package com.makesoftware.siga.ui.home
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+
+data class NavigationItem(
+    val label: String, val icon: @Composable () -> Unit = {}, val onClick: () -> Unit
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UserScreen() {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
+    var selectedIndex by remember { mutableIntStateOf(0) }
+
+    val items = listOf(
+        NavigationItem(label = "Home", onClick = { /* TODO */ }),
+        NavigationItem(label = "Cursos", onClick = { /* TODO */ }),
+    )
+
+    ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
+        ModalDrawerSheet(
+            drawerShape = RectangleShape,
+        ) {
+            DefaultNavigationIcon(modifier = Modifier.padding(top = 8.dp, start = 12.dp)) {
+                scope.launch {
+                    drawerState.close()
+                }
+            }
+
+            items.forEachIndexed { index, item ->
+                NavigationDrawerItem(
+                    label = { Text(text = item.label) },
+                    icon = item.icon,
+                    selected = index == selectedIndex,
+                    onClick = {
+                        selectedIndex = index
+                        scope.launch {
+                            drawerState.close()
+                        }
+                        item.onClick()
+                    },
+                    shape = RectangleShape
+                )
+            }
+        }
+    }) {
+        UserScreenContent(items[selectedIndex].label, drawerState = drawerState)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UserScreenContent(titleText: String, drawerState: DrawerState) {
+    val scope = rememberCoroutineScope()
+
+    Scaffold(
+        topBar = {
+            DefaultTopAppBar(title = {
+                Text(
+                    text = titleText,
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 10.dp)
+                )
+            }, onNavigationIconClick = {
+                scope.launch {
+                    drawerState.open()
+                }
+            })
+        },
+    ) { innerPadding ->
+        HomeScreen()
+    }
+}
+
+@Composable
+fun HomeScreen() {
+    Column() {
+
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DefaultTopAppBar(
+    onNavigationIconClick: () -> Unit, title: @Composable () -> Unit, modifier: Modifier = Modifier
+) {
+    CenterAlignedTopAppBar(colors = TopAppBarDefaults.smallTopAppBarColors(
+        containerColor = Color.Transparent,
+        titleContentColor = MaterialTheme.colorScheme.primary,
+    ), title = {
+        title()
+    }, navigationIcon = {
+        DefaultNavigationIcon(modifier = Modifier.padding(start = 8.dp), onNavigationIconClick)
+    }, actions = {
+        IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(end = 8.dp)) {
+            Icon(
+                Icons.Filled.AccountCircle,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(50.dp)
+            )
+        }
+    }, modifier = modifier
+    )
+}
+
+@Composable
+fun DefaultNavigationIcon(modifier: Modifier = Modifier, onClick: () -> Unit) {
+    IconButton(
+        onClick = { onClick() }, modifier = modifier
+    ) {
+        Icon(
+            Icons.Filled.Menu,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.size(50.dp)
+        )
+    }
+}

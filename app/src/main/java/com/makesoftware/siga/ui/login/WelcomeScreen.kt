@@ -17,7 +17,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
@@ -40,7 +39,7 @@ import com.makesoftware.siga.R
 import com.makesoftware.siga.ui.theme.alternativeTypography
 
 @Composable
-fun LoginScreen(onLogin: () -> Unit, modifier: Modifier = Modifier) {
+fun WelcomeScreen(onLogin: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
