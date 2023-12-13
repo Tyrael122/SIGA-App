@@ -1,16 +1,24 @@
 package com.makesoftware.siga.ui.home
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -52,31 +60,28 @@ fun UserScreen() {
 
     var selectedIndex by remember { mutableIntStateOf(0) }
 
-    val items = listOf(
-        NavigationItem(label = "Home", onClick = { /* TODO */ }, icon = {
-            Icon(
-                Icons.Outlined.Home,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(30.dp)
-            )
-        }),
-        NavigationItem(label = "Cursos", onClick = { /* TODO */ }, icon = {
-            Icon(
-                Icons.Outlined.Home,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(30.dp)
-            )
-        }),
-        NavigationItem(label = "Matérias", onClick = { /* TODO */ }, icon = {
-            Icon(
-                Icons.Outlined.Home,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(30.dp)
-            )
-        })
+    val items = listOf(NavigationItem(label = "Home", onClick = { /* TODO */ }, icon = {
+        Icon(
+            Icons.Outlined.Home,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.size(30.dp)
+        )
+    }), NavigationItem(label = "Cursos", onClick = { /* TODO */ }, icon = {
+        Icon(
+            Icons.Outlined.Home,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.size(30.dp)
+        )
+    }), NavigationItem(label = "Matérias", onClick = { /* TODO */ }, icon = {
+        Icon(
+            Icons.Outlined.Home,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.size(30.dp)
+        )
+    })
     )
 
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
@@ -84,34 +89,70 @@ fun UserScreen() {
             drawerShape = RectangleShape,
             modifier = Modifier.widthIn(max = 300.dp),
         ) {
-            UserInfo(modifier = Modifier.padding(top = 20.dp, bottom = 45.dp))
+            Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight()) {
 
-            items.forEachIndexed { index, item ->
-                NavigationDrawerItem(label = {
-                    Text(
-                        text = item.label,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                },
-                    icon = item.icon,
-                    selected = index == selectedIndex,
-                    onClick = {
-                        selectedIndex = index
-                        scope.launch {
-                            drawerState.close()
-                        }
-                        item.onClick()
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = NavigationDrawerItemDefaults.colors(
-                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                    ),
-                    modifier = Modifier.padding(horizontal = 25.dp, vertical = 10.dp)
+                Column {
+                    UserInfo(modifier = Modifier.padding(top = 20.dp, bottom = 45.dp))
+
+                    items.forEachIndexed { index, item ->
+                        NavigationDrawerItem(label = {
+                            Text(
+                                text = item.label,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                        },
+                            icon = item.icon,
+                            selected = index == selectedIndex,
+                            onClick = {
+                                selectedIndex = index
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                                item.onClick()
+                            },
+                            shape = RoundedCornerShape(10.dp),
+                            colors = NavigationDrawerItemDefaults.colors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                            ),
+                            modifier = Modifier.padding(horizontal = 25.dp, vertical = 10.dp)
+                        )
+                    }
+                }
+
+                LogoutButton(
+                    onClick = {},
+                    modifier = Modifier
+                        .padding(horizontal = 25.dp)
+                        .padding(bottom = 35.dp)
                 )
             }
         }
     }) {
         UserScreenContent(items[selectedIndex].label, drawerState = drawerState)
+    }
+}
+
+@Composable
+fun LogoutButton(onClick: () -> Unit, modifier: Modifier) {
+    Button(
+        onClick = onClick, shape = RoundedCornerShape(10.dp), colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent,
+        ), modifier = modifier
+    ) {
+        Icon(
+            Icons.Outlined.ExitToApp,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.size(30.dp)
+        )
+
+        Spacer(Modifier.width(10.dp))
+
+        Text(
+            text = "Logout",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
     }
 }
 

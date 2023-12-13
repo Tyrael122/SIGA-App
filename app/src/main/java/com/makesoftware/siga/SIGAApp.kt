@@ -29,7 +29,7 @@ fun SIGAApp(modifier: Modifier = Modifier) {
         ) {
             val navController = rememberNavController()
 
-            NavHost(navController = navController, startDestination = Routes.HOME) {
+            NavHost(navController = navController, startDestination = Routes.WELCOME_SCREEN) {
                 composable(Routes.WELCOME_SCREEN) {
                     WelcomeScreen(onLogin = {
                         navController.navigate(Routes.LOGIN_FORM)
