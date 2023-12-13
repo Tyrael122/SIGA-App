@@ -58,6 +58,14 @@ fun AdminSpace(onLogout: () -> Unit) {
 
     var selectedIndex by remember { mutableIntStateOf(0) }
 
+    // TODO: Refactor the modal drawer part to a separate file. (ModalDrawerSheet, LogoutButton, UserInfo).
+    //  Keep the list of navigation items here and pass it as a parameter to a modal function.
+    //  You can also extract ModalNavigationDrawer to another file, and make a function that takes a composable as a content parameter,
+    //  because it can then be reused by multiple types of user.
+    //  The idea is that each type of user can reuse this function,
+    //  just using a NavHost with his own navController, and putting that in the content parameter.
+
+
     val items = listOf(NavigationItem(label = "Home", onClick = { /* TODO */ }, icon = {
         Icon(
             Icons.Outlined.Home,
@@ -126,6 +134,8 @@ fun AdminSpace(onLogout: () -> Unit) {
             }
         }
     }) {
+        // TODO: Merge this function with the DefaultAppBar, and make it accept a composable function as a content parameter,
+        //  as to pass the content here. Extract the app bar to another file, since it will be user by multiple types of user later.
         UserScreenContent(items[selectedIndex].label, drawerState = drawerState)
     }
 }
