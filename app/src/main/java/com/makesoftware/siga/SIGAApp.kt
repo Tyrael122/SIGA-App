@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.makesoftware.siga.ui.home.UserScreen
+import com.makesoftware.siga.ui.users.admin.AdminSpace
 import com.makesoftware.siga.ui.login.LoginFormScreen
 import com.makesoftware.siga.ui.login.WelcomeScreen
 import com.makesoftware.siga.ui.theme.SIGATheme
@@ -17,7 +17,7 @@ class Routes {
     companion object {
         const val LOGIN_FORM = "loginform"
         const val WELCOME_SCREEN = "WelcomeScreen"
-        const val HOME = "Home"
+        const val APP = "App"
     }
 }
 
@@ -39,16 +39,18 @@ fun SIGAApp(modifier: Modifier = Modifier) {
                 composable(Routes.LOGIN_FORM) {
                     LoginFormScreen(
                         onPasswordReset = {
-                            navController.navigate(Routes.HOME) // TODO: Navigate to password reset
+                            navController.navigate(Routes.APP) // TODO: Navigate to password reset
                         },
                         onLogin = {
-                            navController.navigate(Routes.HOME) // TODO: Navigate to home
+                            navController.navigate(Routes.APP)
                         }
                     )
                 }
 
-                composable(Routes.HOME) {
-                    UserScreen()
+                composable(Routes.APP) {
+                    AdminSpace(onLogout = {
+                        navController.navigate(Routes.WELCOME_SCREEN)
+                    })
                 }
             }
         }

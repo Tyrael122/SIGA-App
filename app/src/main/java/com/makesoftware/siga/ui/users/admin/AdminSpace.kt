@@ -1,4 +1,4 @@
-package com.makesoftware.siga.ui.home
+package com.makesoftware.siga.ui.users.admin
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,11 +12,9 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -54,7 +52,7 @@ data class NavigationItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserScreen() {
+fun AdminSpace(onLogout: () -> Unit) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -120,7 +118,7 @@ fun UserScreen() {
                 }
 
                 LogoutButton(
-                    onClick = {},
+                    onClick = onLogout,
                     modifier = Modifier
                         .padding(horizontal = 25.dp)
                         .padding(bottom = 35.dp)
