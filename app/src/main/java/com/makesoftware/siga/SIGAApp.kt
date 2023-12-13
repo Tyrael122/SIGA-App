@@ -12,12 +12,12 @@ import com.makesoftware.siga.ui.users.admin.AdminSpace
 import com.makesoftware.siga.ui.login.LoginFormScreen
 import com.makesoftware.siga.ui.login.WelcomeScreen
 import com.makesoftware.siga.ui.theme.SIGATheme
+import com.makesoftware.siga.ui.users.admin.AdminRoutes
 
-class Routes {
+class MainRoutes {
     companion object {
         const val LOGIN_FORM = "loginform"
         const val WELCOME_SCREEN = "WelcomeScreen"
-        const val APP = "App"
     }
 }
 
@@ -29,27 +29,27 @@ fun SIGAApp(modifier: Modifier = Modifier) {
         ) {
             val navController = rememberNavController()
 
-            NavHost(navController = navController, startDestination = Routes.WELCOME_SCREEN) {
-                composable(Routes.WELCOME_SCREEN) {
+            NavHost(navController = navController, startDestination = MainRoutes.WELCOME_SCREEN) {
+                composable(MainRoutes.WELCOME_SCREEN) {
                     WelcomeScreen(onLogin = {
-                        navController.navigate(Routes.LOGIN_FORM)
+                        navController.navigate(MainRoutes.LOGIN_FORM)
                     })
                 }
 
-                composable(Routes.LOGIN_FORM) {
+                composable(MainRoutes.LOGIN_FORM) {
                     LoginFormScreen(
                         onPasswordReset = {
-                            navController.navigate(Routes.APP) // TODO: Navigate to password reset
+                            navController.navigate(AdminRoutes.HOME) // TODO: Navigate to password reset
                         },
                         onLogin = {
-                            navController.navigate(Routes.APP)
+                            navController.navigate(AdminRoutes.HOME) // TODO: Navigate to each user's space
                         }
                     )
                 }
 
-                composable(Routes.APP) {
+                composable(AdminRoutes.HOME) {
                     AdminSpace(onLogout = {
-                        navController.navigate(Routes.WELCOME_SCREEN)
+                        navController.navigate(MainRoutes.WELCOME_SCREEN)
                     })
                 }
             }
