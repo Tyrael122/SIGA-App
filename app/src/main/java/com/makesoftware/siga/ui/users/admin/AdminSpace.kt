@@ -1,21 +1,16 @@
 package com.makesoftware.siga.ui.users.admin
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material3.Icon
+import androidx.compose.material.icons.outlined.School
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.makesoftware.siga.R
 import com.makesoftware.siga.ui.commons.AppSpace
 import com.makesoftware.siga.ui.commons.NavigationItem
 import com.makesoftware.siga.ui.commons.createNavigationItem
@@ -25,24 +20,24 @@ fun AdminSpace(onLogout: () -> Unit) {
 
     val navController = rememberNavController()
 
-    val currentRoute = navController.currentBackStackEntry?.destination?.route
+    val currentRoute = navController.currentBackStackEntry?.destination?.route ?: AdminRoutes.HOME
 
     val items = listOf(
         createNavigationItem(
             label = "Home",
             route = AdminRoutes.HOME,
             imageVector = Icons.Outlined.Home,
-            onClick = { /* TODO */ }),
+            onClick = { navController.navigate(AdminRoutes.HOME) }),
         createNavigationItem(
             label = "Cursos",
             route = AdminRoutes.CURSOS,
-            imageVector = Icons.Outlined.Home,
-            onClick = { /* TODO */ }),
+            imageVector = Icons.Outlined.School,
+            onClick = { navController.navigate(AdminRoutes.CURSOS) }),
         createNavigationItem(
             label = "Matérias",
             route = AdminRoutes.MATERIAS,
             imageVector = Icons.Outlined.Home,
-            onClick = { /* TODO */ })
+            onClick = { navController.navigate(AdminRoutes.MATERIAS) }),
     )
 
     AppSpace(items = items, currentRoute = currentRoute, onLogout = onLogout, topAppBarTitle = {
@@ -51,12 +46,12 @@ fun AdminSpace(onLogout: () -> Unit) {
             currentRoute = currentRoute,
         )
     }) {
-        AdminNavGraph(navController)
+        AdminNavGraph(navController, it)
     }
 }
 
 @Composable
-fun AppBarTitle(items: List<NavigationItem>, currentRoute: String?, modifier: Modifier = Modifier) {
+fun AppBarTitle(items: List<NavigationItem>, currentRoute: String, modifier: Modifier = Modifier) {
     val selectedIndex = items.indexOfFirst { it.route == currentRoute }
 
     Text(

@@ -12,12 +12,12 @@ import com.makesoftware.siga.ui.users.admin.AdminSpace
 import com.makesoftware.siga.ui.login.LoginFormScreen
 import com.makesoftware.siga.ui.login.WelcomeScreen
 import com.makesoftware.siga.ui.theme.SIGATheme
-import com.makesoftware.siga.ui.users.admin.AdminRoutes
 
 class MainRoutes {
     companion object {
         const val LOGIN_FORM = "loginform"
         const val WELCOME_SCREEN = "WelcomeScreen"
+        const val ADMIN_SPACE = "AdminSpace"
     }
 }
 
@@ -25,7 +25,7 @@ class MainRoutes {
 fun SIGAApp(modifier: Modifier = Modifier) {
     SIGATheme(useDarkTheme = false) {
         Surface(
-            modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
+            modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
         ) {
             val navController = rememberNavController()
 
@@ -39,15 +39,15 @@ fun SIGAApp(modifier: Modifier = Modifier) {
                 composable(MainRoutes.LOGIN_FORM) {
                     LoginFormScreen(
                         onPasswordReset = {
-                            navController.navigate(AdminRoutes.HOME) // TODO: Navigate to password reset
+                            navController.navigate(MainRoutes.ADMIN_SPACE) // TODO: Navigate to password reset
                         },
                         onLogin = {
-                            navController.navigate(AdminRoutes.HOME) // TODO: Navigate to each user's space
+                            navController.navigate(MainRoutes.ADMIN_SPACE) // TODO: Navigate to each user's space
                         }
                     )
                 }
 
-                composable(AdminRoutes.HOME) {
+                composable(MainRoutes.ADMIN_SPACE) {
                     AdminSpace(onLogout = {
                         navController.navigate(MainRoutes.WELCOME_SCREEN)
                     })

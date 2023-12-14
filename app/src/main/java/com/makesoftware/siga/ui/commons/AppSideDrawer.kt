@@ -57,7 +57,7 @@ fun createNavigationItem(
 @Composable
 fun DrawerContent(
     items: List<NavigationItem>,
-    currentRoute: String?,
+    currentRoute: String,
     onLogout: () -> Unit,
     closeDrawer: () -> Unit,
     modifier: Modifier = Modifier,
@@ -83,8 +83,8 @@ fun DrawerContent(
                         icon = item.icon,
                         selected = item.route == currentRoute,
                         onClick = {
-                            closeDrawer()
                             item.onClick()
+                            closeDrawer()
                         },
                         shape = RoundedCornerShape(10.dp),
                         colors = NavigationDrawerItemDefaults.colors(

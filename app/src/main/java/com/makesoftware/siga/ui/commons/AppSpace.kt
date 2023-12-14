@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AppSpace(
     items: List<NavigationItem>,
-    currentRoute: String?,
+    currentRoute: String,
     topAppBarTitle: @Composable () -> Unit,
     onLogout: () -> Unit,
     modifier: Modifier = Modifier,

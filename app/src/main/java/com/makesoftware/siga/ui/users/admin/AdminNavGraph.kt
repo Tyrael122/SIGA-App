@@ -1,11 +1,15 @@
 package com.makesoftware.siga.ui.users.admin
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.makesoftware.siga.MainRoutes
+import com.makesoftware.siga.ui.users.admin.screens.AdminCourseScreen
 import com.makesoftware.siga.ui.users.admin.screens.AdminHomeScreen
-
 
 
 class AdminRoutes {
@@ -17,10 +21,21 @@ class AdminRoutes {
 }
 
 @Composable
-fun AdminNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AdminRoutes.HOME) {
+fun AdminNavGraph(
+    navController: NavHostController, paddingValues: PaddingValues, modifier: Modifier = Modifier
+) {
+    NavHost(
+        navController = navController,
+        startDestination = AdminRoutes.HOME,
+        route = MainRoutes.ADMIN_SPACE,
+        modifier = modifier.padding(paddingValues)
+    ) {
         composable(AdminRoutes.HOME) {
             AdminHomeScreen()
+        }
+
+        composable(AdminRoutes.CURSOS) {
+            AdminCourseScreen()
         }
     }
 }
