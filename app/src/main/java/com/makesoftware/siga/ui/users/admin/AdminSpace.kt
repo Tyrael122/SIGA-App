@@ -7,6 +7,10 @@ import androidx.compose.material.icons.outlined.School
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -20,21 +24,26 @@ fun AdminSpace(onLogout: () -> Unit) {
 
     val navController = rememberNavController()
 
-    val currentRoute = navController.currentBackStackEntry?.destination?.route ?: AdminRoutes.HOME
+    var currentRoute by remember {
+        mutableStateOf(
+            navController.currentBackStackEntry?.destination?.route ?: AdminRoutes.HOME
+        )
+    }
+
+    navController.addOnDestinationChangedListener(listener = { controller, destination, arguments ->
+        currentRoute = destination.route ?: AdminRoutes.HOME
+    })
 
     val items = listOf(
-        createNavigationItem(
-            label = "Home",
+        createNavigationItem(label = "Home",
             route = AdminRoutes.HOME,
             imageVector = Icons.Outlined.Home,
             onClick = { navController.navigate(AdminRoutes.HOME) }),
-        createNavigationItem(
-            label = "Cursos",
+        createNavigationItem(label = "Cursos",
             route = AdminRoutes.CURSOS,
             imageVector = Icons.Outlined.School,
             onClick = { navController.navigate(AdminRoutes.CURSOS) }),
-        createNavigationItem(
-            label = "Matérias",
+        createNavigationItem(label = "Matérias",
             route = AdminRoutes.MATERIAS,
             imageVector = Icons.Outlined.Home,
             onClick = { navController.navigate(AdminRoutes.MATERIAS) }),
