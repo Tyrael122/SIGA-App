@@ -14,8 +14,8 @@ import com.makesoftware.siga.ui.users.admin.screens.AdminHomeScreen
 
 class AdminRoutes {
     companion object {
-        const val CURSOS = "Cursos"
-        const val MATERIAS = "Materias"
+        const val COURSES = "Cursos"
+        const val SUBJECTS = "Materias"
         const val HOME = "AdminHome"
     }
 }
@@ -26,7 +26,7 @@ fun AdminNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AdminRoutes.HOME,
+        startDestination = AdminRoutes.COURSES,
         route = MainRoutes.ADMIN_SPACE,
         modifier = modifier.padding(paddingValues)
     ) {
@@ -34,7 +34,7 @@ fun AdminNavGraph(
             AdminHomeScreen()
         }
 
-        composable(AdminRoutes.CURSOS) {
+        composable(AdminRoutes.COURSES) {
             AdminCourseScreen()
         }
     }

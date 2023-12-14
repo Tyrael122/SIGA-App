@@ -31,12 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.makesoftware.siga.R
 import com.makesoftware.siga.ui.theme.alternativeTypography
+import com.makesoftware.siga.ui.theme.secondary_color
 
 @Composable
 fun WelcomeScreen(onLogin: () -> Unit, modifier: Modifier = Modifier) {
@@ -126,12 +128,12 @@ fun LoginHeaderText(modifier: Modifier = Modifier) {
 fun LoginForm(modifier: Modifier = Modifier, onPasswordReset: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
         var login by rememberSaveable { mutableStateOf("") }
-        DefaultTextField(value = login, placeholderText = "Login", onValueChange = { login = it })
+        DefaultOutlinedTextField(value = login, placeholderText = "Login", onValueChange = { login = it })
 
         Spacer(Modifier.height(30.dp))
 
         var password by rememberSaveable { mutableStateOf("") }
-        DefaultTextField(
+        DefaultOutlinedTextField(
             value = password,
             placeholderText = "Senha",
             onValueChange = { password = it })
@@ -164,19 +166,19 @@ fun DefaultElevatedButton(onClick: () -> Unit, text: String, modifier: Modifier 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DefaultTextField(
+fun DefaultOutlinedTextField(
     value: String,
     placeholderText: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
+    containerColor: Color = secondary_color,
     singleLine: Boolean = true,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: InteractionSource = remember { MutableInteractionSource() },
     enabled: Boolean = true,
     isError: Boolean = false,
 ) {
-
-    val textStyle = MaterialTheme.typography.bodyLarge
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
@@ -201,7 +203,7 @@ fun DefaultTextField(
                 isError = isError,
                 interactionSource = interactionSource,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    containerColor = Color(0xFFF1F4FF),
+                    containerColor = containerColor,
                     unfocusedBorderColor = MaterialTheme.colorScheme.primary,
                 ),
                 focusedBorderThickness = 4.dp,
@@ -210,3 +212,4 @@ fun DefaultTextField(
         }
     }
 }
+

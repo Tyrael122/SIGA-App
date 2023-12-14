@@ -2,6 +2,7 @@ package com.makesoftware.siga.ui.users.admin
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material3.MaterialTheme
@@ -40,13 +41,13 @@ fun AdminSpace(onLogout: () -> Unit) {
             imageVector = Icons.Outlined.Home,
             onClick = { navController.navigate(AdminRoutes.HOME) }),
         createNavigationItem(label = "Cursos",
-            route = AdminRoutes.CURSOS,
+            route = AdminRoutes.COURSES,
             imageVector = Icons.Outlined.School,
-            onClick = { navController.navigate(AdminRoutes.CURSOS) }),
+            onClick = { navController.navigate(AdminRoutes.COURSES) }),
         createNavigationItem(label = "Matérias",
-            route = AdminRoutes.MATERIAS,
-            imageVector = Icons.Outlined.Home,
-            onClick = { navController.navigate(AdminRoutes.MATERIAS) }),
+            route = AdminRoutes.SUBJECTS,
+            imageVector = Icons.Outlined.Book,
+            onClick = { navController.navigate(AdminRoutes.SUBJECTS) }),
     )
 
     AppSpace(items = items, currentRoute = currentRoute, onLogout = onLogout, topAppBarTitle = {
