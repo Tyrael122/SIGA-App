@@ -1,6 +1,7 @@
 package com.makesoftware.siga.ui.users.admin.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -43,8 +44,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.makesoftware.siga.ui.theme.secondary_color
@@ -75,11 +78,16 @@ fun DataGrid(modifier: Modifier = Modifier, backgroundColor: Color = secondary_c
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
+            .shadow(1.dp, RoundedCornerShape(10.dp))
             .fillMaxSize()
             .clip(RoundedCornerShape(10.dp))
             .background(backgroundColor)
     ) {
-        SearchBar(Modifier.padding(horizontal = 12.dp).padding(top = 15.dp))
+        SearchBar(
+            Modifier
+                .padding(horizontal = 12.dp)
+                .padding(top = 15.dp)
+        )
     }
 }
 
@@ -110,6 +118,7 @@ fun FilterButton(modifier: Modifier = Modifier) {
         ),
         modifier = modifier
             .width(50.dp)
+            .fillMaxHeight()
     ) {
         Icon(Icons.Filled.FilterAlt, contentDescription = null)
     }
@@ -119,31 +128,32 @@ fun FilterButton(modifier: Modifier = Modifier) {
 @Composable
 fun SearchTextField(modifier: Modifier = Modifier) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .fillMaxHeight()
-            .clip(RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colorScheme.surface)
+        verticalAlignment = Alignment.CenterVertically, modifier = modifier.fillMaxHeight()
     ) {
 
         var text by remember { mutableStateOf("") }
 
-        Icon(
-            Icons.Filled.Search, contentDescription = null, modifier = Modifier.padding(end = 16.dp)
-        )
-
-//        BasicTextField(value = text, onValueChange = { text = it })
-
         BasicFilledTextField(
             value = text,
             onValueChange = { text = it },
-            textStyle = MaterialTheme.typography.bodyMedium,
+            textStyle = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Normal),
             placeholderText = "Search...",
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.Search,
+                    contentDescription = null,
+                )
+            },
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = MaterialTheme.colorScheme.surface,
                 textColor = MaterialTheme.colorScheme.onSurface,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
             ),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .shadow(1.dp, RoundedCornerShape(10.dp))
         )
     }
 }
@@ -156,6 +166,8 @@ fun BasicFilledTextField(
     placeholderText: String = "",
     onValueChange: (String) -> Unit,
     textStyle: TextStyle,
+    shape: RoundedCornerShape = RoundedCornerShape(10.dp),
+    leadingIcon: @Composable (() -> Unit)? = null,
     colors: TextFieldColors = TextFieldDefaults.textFieldColors(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     singleLine: Boolean = true,
@@ -170,25 +182,30 @@ fun BasicFilledTextField(
         textStyle = textStyle,
         modifier = modifier.fillMaxWidth()
     ) {
-        TextFieldDefaults.TextFieldDecorationBox(
+        TextFieldDefaults.OutlinedTextFieldDecorationBox(
             value = value,
             innerTextField = it,
             contentPadding = contentPadding,
             enabled = true,
             singleLine = singleLine,
+            leadingIcon = leadingIcon,
             visualTransformation = visualTransformation,
             interactionSource = interactionSource,
+            colors = colors,
             placeholder = {
                 Text(
                     text = placeholderText, style = textStyle
                 )
             },
         ) {
-            TextFieldDefaults.FilledContainerBox(
+            TextFieldDefaults.OutlinedBorderContainerBox(
                 enabled = enabled,
                 isError = isError,
                 interactionSource = interactionSource,
-                colors = colors
+                colors = colors,
+                shape = shape,
+                focusedBorderThickness = 0.dp,
+                unfocusedBorderThickness = 0.dp
             )
         }
     }
