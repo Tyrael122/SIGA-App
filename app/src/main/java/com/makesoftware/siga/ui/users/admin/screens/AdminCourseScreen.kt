@@ -54,7 +54,6 @@ fun AdminCourseScreen(modifier: Modifier = Modifier) {
             items = items.plus(items)
         }
 
-        // TODO: Use map to create DataGridItem
         DataGrid(
             items = items,
             columns = listOf(

@@ -40,9 +40,9 @@ data class NavigationItem(
 )
 
 fun createNavigationItem(
-    label: String, route: String, imageVector: ImageVector, onClick: () -> Unit
+    label: String, route: String, imageVector: ImageVector, onClick: (String) -> Unit
 ): NavigationItem {
-    return NavigationItem(label = label, route = route, onClick = onClick, icon = {
+    return NavigationItem(label = label, route = route, onClick = { onClick(route) }, icon = {
         Icon(
             imageVector = imageVector,
             contentDescription = null,

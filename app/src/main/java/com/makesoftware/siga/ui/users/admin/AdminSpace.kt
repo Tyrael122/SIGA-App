@@ -2,8 +2,10 @@ package com.makesoftware.siga.ui.users.admin
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Backpack
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -39,15 +41,27 @@ fun AdminSpace(onLogout: () -> Unit) {
         createNavigationItem(label = "Home",
             route = AdminRoutes.HOME,
             imageVector = Icons.Outlined.Home,
-            onClick = { navController.navigate(AdminRoutes.HOME) }),
+            onClick = { navController.navigate(it) }),
+
         createNavigationItem(label = "Cursos",
             route = AdminRoutes.COURSES,
             imageVector = Icons.Outlined.School,
-            onClick = { navController.navigate(AdminRoutes.COURSES) }),
+            onClick = { navController.navigate(it) }),
+
         createNavigationItem(label = "Matérias",
             route = AdminRoutes.SUBJECTS,
             imageVector = Icons.Outlined.Book,
-            onClick = { navController.navigate(AdminRoutes.SUBJECTS) }),
+            onClick = { navController.navigate(it) }),
+
+        createNavigationItem(label = "Professores",
+            route = AdminRoutes.TEACHERS,
+            imageVector = Icons.Outlined.Person,
+            onClick = { navController.navigate(it) }),
+
+        createNavigationItem(label = "Alunos",
+            route = AdminRoutes.STUDENTS,
+            imageVector = Icons.Outlined.Backpack,
+            onClick = { navController.navigate(it) }),
     )
 
     AppSpace(items = items, currentRoute = currentRoute, onLogout = onLogout, topAppBarTitle = {
