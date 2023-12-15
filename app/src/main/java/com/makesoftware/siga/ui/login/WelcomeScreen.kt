@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.makesoftware.siga.R
+import com.makesoftware.siga.ui.commons.DefaultElevatedButton
 import com.makesoftware.siga.ui.theme.alternativeTypography
 import com.makesoftware.siga.ui.theme.secondary_color
 
@@ -106,7 +107,7 @@ fun LoginFormScreen(
 }
 
 @Composable
-fun LoginHeaderText(modifier: Modifier = Modifier) {
+private fun LoginHeaderText(modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier
     ) {
@@ -125,7 +126,7 @@ fun LoginHeaderText(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun LoginForm(modifier: Modifier = Modifier, onPasswordReset: () -> Unit) {
+private fun LoginForm(modifier: Modifier = Modifier, onPasswordReset: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
         var login by rememberSaveable { mutableStateOf("") }
         DefaultOutlinedTextField(value = login, placeholderText = "Login", onValueChange = { login = it })
@@ -141,26 +142,6 @@ fun LoginForm(modifier: Modifier = Modifier, onPasswordReset: () -> Unit) {
         TextButton(onClick = onPasswordReset, Modifier.align(Alignment.End)) {
             Text(text = "Esqueceu sua senha?", style = MaterialTheme.typography.bodyMedium)
         }
-    }
-}
-
-@Composable
-fun DefaultElevatedButton(onClick: () -> Unit, text: String, modifier: Modifier = Modifier) {
-    ElevatedButton(
-        onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-        shape = RoundedCornerShape(10.dp),
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 76.dp)
-            .padding(bottom = 76.dp)
-            .height(60.dp)
-            .widthIn(max = 245.dp)
-    ) {
-        Text(
-            text = text,
-            style = alternativeTypography.bodyLarge,
-        )
     }
 }
 
