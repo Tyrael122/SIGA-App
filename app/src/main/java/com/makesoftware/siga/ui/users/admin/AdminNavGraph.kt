@@ -8,11 +8,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.makesoftware.siga.MainRoutes
-import com.makesoftware.siga.ui.users.admin.screens.AdminCourseScreen
-import com.makesoftware.siga.ui.users.admin.screens.AdminHomeScreen
-import com.makesoftware.siga.ui.users.admin.screens.AdminStudentScreen
-import com.makesoftware.siga.ui.users.admin.screens.AdminSubjectScreen
-import com.makesoftware.siga.ui.users.admin.screens.AdminTeacherScreen
+import com.makesoftware.siga.ui.users.admin.screens.dataview.AdminCourseScreen
+import com.makesoftware.siga.ui.users.admin.screens.dataview.AdminHomeScreen
+import com.makesoftware.siga.ui.users.admin.screens.dataview.AdminStudentScreen
+import com.makesoftware.siga.ui.users.admin.screens.dataview.AdminSubjectScreen
+import com.makesoftware.siga.ui.users.admin.screens.dataview.AdminTeacherScreen
 
 
 class AdminRoutes {

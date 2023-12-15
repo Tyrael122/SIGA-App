@@ -18,7 +18,7 @@ import com.makesoftware.siga.ui.commons.DataGridRowContent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminDataGridScreen(columns: List<DataGridColumnProperties>, items: List<DataGridRowContent>, onAddEntity: () -> Unit, modifier: Modifier = Modifier) {
+fun AdminDataViewScreen(columns: List<DataGridColumnProperties>, items: List<DataGridRowContent>, onAddEntity: () -> Unit, modifier: Modifier = Modifier) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(

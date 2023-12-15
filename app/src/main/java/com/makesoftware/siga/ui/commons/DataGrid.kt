@@ -207,7 +207,7 @@ fun SearchTextField(modifier: Modifier = Modifier) {
 
         BasicFilledTextField(
             value = text,
-            onValueChange = { text = it },
+            onValueChange = { text = it }, // TODO: Do search here.
             textStyle = DataGridTypograhpy.bodyLarge.copy(fontWeight = FontWeight.Normal),
             placeholderText = "Search...",
             leadingIcon = {

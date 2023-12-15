@@ -1,35 +1,35 @@
-package com.makesoftware.siga.ui.users.admin.screens
+package com.makesoftware.siga.ui.users.admin.screens.dataview
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.makesoftware.siga.ui.commons.DataGridColumnProperties
 import com.makesoftware.siga.ui.commons.DataGridRowContent
-import com.makesoftware.siga.ui.users.admin.AdminDataGridScreen
+import com.makesoftware.siga.ui.users.admin.AdminDataViewScreen
 
 
 @Composable
-fun AdminSubjectScreen(modifier: Modifier = Modifier) {
-    AdminDataGridScreen(
+fun AdminTeacherScreen(modifier: Modifier = Modifier) {
+    AdminDataViewScreen(
         columns = listOf(
             DataGridColumnProperties("Nome", 2F, TextAlign.Start),
-            DataGridColumnProperties("Sigla", 1F, TextAlign.Center),
-            DataGridColumnProperties("Semestre", 1F, TextAlign.Center)
+            DataGridColumnProperties("Nível", 1.5F, TextAlign.Center),
+            DataGridColumnProperties("Idade", 0.7F, TextAlign.Center),
         ),
         items = listOf(
             DataGridRowContent(
                 listOf(
-                    "Laboratório de Engenharia de Software", "ADS", "1"
+                    "Flávio Viotti", "Mestre", "35"
                 )
             ),
             DataGridRowContent(
                 listOf(
-                    "Economia", "ADS", "2"
+                    "Rodrigo Amorim", "Doutor", "45"
                 )
             ),
             DataGridRowContent(
                 listOf(
-                    "Sistemas Operacionais", "ADS", "3"
+                    "Humberto", "Faixa preta", "25"
                 )
             ),
         ),

@@ -9,8 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.makesoftware.siga.ui.users.admin.AdminSpace
-import com.makesoftware.siga.ui.login.LoginFormScreen
-import com.makesoftware.siga.ui.login.WelcomeScreen
+import com.makesoftware.siga.ui.commons.login.LoginFormScreen
+import com.makesoftware.siga.ui.commons.login.WelcomeScreen
 import com.makesoftware.siga.ui.theme.SIGATheme
 
 class MainRoutes {
