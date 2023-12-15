@@ -1,7 +1,6 @@
 package com.makesoftware.siga.ui.users.admin.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
@@ -28,12 +28,9 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -49,7 +46,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.makesoftware.siga.ui.theme.DataGridTypograhpy
 import com.makesoftware.siga.ui.theme.secondary_color
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,13 +57,45 @@ fun AdminCourseScreen(modifier: Modifier = Modifier) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* TODO */ }, modifier = Modifier.padding(end = 16.dp, bottom = 16.dp)
+                onClick = { /* TODO */ },
+                containerColor = MaterialTheme.colorScheme.primary,
+                shape = CircleShape,
+                modifier = Modifier.padding(end = 16.dp, bottom = 16.dp)
             ) {
                 Icon(Icons.Filled.Add, contentDescription = null)
             }
         }, modifier = modifier
     ) {
+        var items = listOf(
+            DataGridRowContent(
+                listOf(
+                    "Laboratório de Engenharia de Software", "ADS", // "2023"
+                )
+            ),
+            DataGridRowContent(
+                listOf(
+                    "Economia", "ADS", // "2021"
+                )
+            ),
+            DataGridRowContent(
+                listOf(
+                    "Sistemas Operacionais", "ADS", // "2021"
+                )
+            ),
+        )
+
+        for (i in 0..10) {
+            items = items.plus(items)
+        }
+
+        // TODO: Use map to create DataGridItem
         DataGrid(
+            items = items,
+            columns = listOf(
+                DataGridColumnProperties("Nome", 2F, TextAlign.Start),
+                DataGridColumnProperties("Sigla", 1F, TextAlign.Center),
+                DataGridColumnProperties("Ano", 1F, TextAlign.Center)
+            ),
             modifier = Modifier
                 .padding(it)
                 .padding(horizontal = 15.dp)
@@ -74,7 +105,12 @@ fun AdminCourseScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun DataGrid(modifier: Modifier = Modifier, backgroundColor: Color = secondary_color) {
+fun DataGrid(
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = secondary_color,
+    items: List<DataGridRowContent>,
+    columns: List<DataGridColumnProperties>
+) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
@@ -83,13 +119,123 @@ fun DataGrid(modifier: Modifier = Modifier, backgroundColor: Color = secondary_c
             .clip(RoundedCornerShape(10.dp))
             .background(backgroundColor)
     ) {
-        SearchBar(
-            Modifier
-                .padding(horizontal = 12.dp)
-                .padding(top = 15.dp)
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
+        ) {
+            SearchBar(Modifier.padding(horizontal = 12.dp))
+
+            Spacer(Modifier.height(20.dp))
+
+            LazyItemGrid(
+                items = items, columns = columns
+            )
+        }
     }
 }
+
+@Composable
+fun LazyItemGrid(
+    modifier: Modifier = Modifier,
+    columns: List<DataGridColumnProperties>,
+    items: List<DataGridRowContent>
+) {
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        DataGridHeader(
+            columns = columns, modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .heightIn(min = 45.dp)
+        )
+
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+
+            items(items.size) { index ->
+                val backgroundColor =
+                    if (index % 2 == 0) MaterialTheme.colorScheme.surface else Color.Transparent
+
+                val dataGridRowContent = items[index]
+                val columnContentMap = generateColumnContentMap(columns, dataGridRowContent)
+
+                DataGridRow(
+                    columnContentMap = columnContentMap,
+                    modifier = Modifier
+                        .heightIn(min = 60.dp)
+                        .background(backgroundColor)
+                        .padding(horizontal = 12.dp)
+                )
+            }
+        }
+    }
+}
+
+fun generateColumnContentMap(
+    columns: List<DataGridColumnProperties>, dataGridRowContent: DataGridRowContent
+): Map<DataGridColumnProperties, String> {
+
+    var columnContentMap = mapOf<DataGridColumnProperties, String>()
+    for (i in columns.indices) {
+
+        var text = ""
+        if (i < dataGridRowContent.texts.size) {
+            text = dataGridRowContent.texts[i]
+        }
+
+        columnContentMap = columnContentMap.plus(Pair(columns[i], text))
+    }
+
+    return columnContentMap
+}
+
+@Composable
+fun DataGridHeader(modifier: Modifier = Modifier, columns: List<DataGridColumnProperties>) {
+    DataGridRow(
+        columnContentMap = columns.associateWith { it.name },
+        style = DataGridTypograhpy.bodyMedium,
+        textColor = MaterialTheme.colorScheme.onSurface,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun DataGridRow(
+    columnContentMap: Map<DataGridColumnProperties, String>,
+    modifier: Modifier = Modifier,
+    style: TextStyle = DataGridTypograhpy.bodyLarge,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        columnContentMap.forEach {
+            val text = it.value
+            val dataGridColumn = it.key
+
+            Text(
+                text = text,
+                textAlign = dataGridColumn.textAlign,
+                style = style,
+                color = textColor,
+                modifier = Modifier
+                    .weight(dataGridColumn.weight)
+                    .padding(vertical = 10.dp)
+            )
+        }
+    }
+}
+
+// TODO: Maybe add a padding property in the future.
+data class DataGridColumnProperties(
+    val name: String, val weight: Float, val textAlign: TextAlign = TextAlign.Start
+)
+
+data class DataGridRowContent(val texts: List<String>)
 
 @Composable
 fun SearchBar(modifier: Modifier = Modifier) {
@@ -136,7 +282,7 @@ fun SearchTextField(modifier: Modifier = Modifier) {
         BasicFilledTextField(
             value = text,
             onValueChange = { text = it },
-            textStyle = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Normal),
+            textStyle = DataGridTypograhpy.bodyLarge.copy(fontWeight = FontWeight.Normal),
             placeholderText = "Search...",
             leadingIcon = {
                 Icon(
@@ -182,7 +328,7 @@ fun BasicFilledTextField(
         textStyle = textStyle,
         modifier = modifier.fillMaxWidth()
     ) {
-        TextFieldDefaults.OutlinedTextFieldDecorationBox(
+        TextFieldDefaults.TextFieldDecorationBox(
             value = value,
             innerTextField = it,
             contentPadding = contentPadding,
@@ -198,14 +344,12 @@ fun BasicFilledTextField(
                 )
             },
         ) {
-            TextFieldDefaults.OutlinedBorderContainerBox(
+            TextFieldDefaults.FilledContainerBox(
                 enabled = enabled,
                 isError = isError,
                 interactionSource = interactionSource,
                 colors = colors,
                 shape = shape,
-                focusedBorderThickness = 0.dp,
-                unfocusedBorderThickness = 0.dp
             )
         }
     }

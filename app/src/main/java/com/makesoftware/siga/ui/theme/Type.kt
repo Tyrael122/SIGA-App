@@ -58,3 +58,31 @@ val alternativeTypography = Typography(
         letterSpacing = 0.5.sp
     )
 )
+
+
+val interFamily = FontFamily(
+    Font(R.font.inter_light, FontWeight.Light),
+    Font(R.font.inter_regular, FontWeight.Normal),
+    Font(R.font.inter_medium, FontWeight.Medium),
+    Font(R.font.inter_semibold, FontWeight.SemiBold),
+    Font(R.font.inter_bold, FontWeight.Bold)
+)
+
+class DataGridTypograhpy {
+    companion object {
+        val bodyMedium: TextStyle = TextStyle(
+            fontFamily = interFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            letterSpacing = 0.25.sp
+        )
+        val bodyLarge = TextStyle(
+            fontFamily = interFamily,
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp,
+            lineHeight = 24.sp,
+            letterSpacing = 0.5.sp
+        )
+    }
+}
