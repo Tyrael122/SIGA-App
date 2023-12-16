@@ -15,10 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.makesoftware.siga.ui.commons.components.DefaultElevatedButton
 import com.makesoftware.siga.ui.commons.components.FormNumberTextField
+import com.makesoftware.siga.ui.commons.components.FormSelectableDataGrid
 import com.makesoftware.siga.ui.commons.components.FormTextField
 
 @Composable
-fun AdminCourseForm(onSaveCourse: () -> Unit) {
+fun AdminCourseForm(
+    commitButtonText: String,
+    onCommitRequest: () -> Unit,
+    onSelectSubjectsRequest: () -> Unit
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
@@ -57,17 +62,14 @@ fun AdminCourseForm(onSaveCourse: () -> Unit) {
 
             FormSelectableDataGrid(
                 infoText = "Disciplinas",
-                onClick = { /* TODO */ },
+                onSelectRequest = onSelectSubjectsRequest,
+                numberOfSelectedItems = 10,
                 modifier = Modifier.padding(top = 30.dp)
             )
         }
 
         DefaultElevatedButton(
-            onClick = onSaveCourse, text = "Salvar", modifier = Modifier.padding(bottom = 15.dp)
+            onClick = onCommitRequest, text = commitButtonText, modifier = Modifier.padding(bottom = 15.dp)
         )
     }
-}
-
-@Composable
-fun FormSelectableDataGrid(infoText: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
 }

@@ -24,7 +24,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.makesoftware.siga.ui.theme.secondary_color
+import com.makesoftware.siga.ui.theme.AlternativeColorScheme
 
 
 // TODO: Refactor this to provide a decent set of TextField components with decent APIs
@@ -42,7 +42,7 @@ fun DefaultOutlinedTextField(
     placeholderText: String = "",
     onValueChange: (String) -> Unit,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
-    containerColor: Color = secondary_color,
+    containerColor: Color = AlternativeColorScheme.secondary_color,
     focusedBorderThickness: Dp = 2.dp,
     unfocusedBorderThickness: Dp = 1.dp,
     singleLine: Boolean = true,
@@ -60,10 +60,6 @@ fun DefaultOutlinedTextField(
     contentPadding: PaddingValues = TextFieldDefaults.outlinedTextFieldPadding(),
     minLines: Int = 1,
 ) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-    )
     BasicTextField(
         value = value,
         onValueChange = onValueChange,

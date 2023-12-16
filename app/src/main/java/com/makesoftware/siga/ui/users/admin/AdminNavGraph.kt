@@ -34,17 +34,20 @@ fun AdminNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AdminRoutes.COURSES,
+        startDestination = AdminRoutes.COURSE_FORM,
         route = MainRoutes.ADMIN_SPACE,
         modifier = modifier.padding(paddingValues)
     ) {
         adminDataview(navController)
 
         composable(AdminRoutes.COURSE_FORM) {
-            AdminCourseForm(onSaveCourse = {
+            AdminCourseForm(onSelectSubjectsRequest = {
+                // TODO: Navigate to the subjects screen, with the selectable option
+            }, onCommitRequest = {
                 // TODO: Actually save the course
                 // TODO: Show a toast message saying that the course was saved
-            })
+            }, commitButtonText = "Salvar"
+            )
         }
     }
 }

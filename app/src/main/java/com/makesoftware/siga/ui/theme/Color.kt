@@ -1,4 +1,5 @@
 package com.makesoftware.siga.ui.theme
+
 import androidx.compose.ui.graphics.Color
 
 val md_theme_light_primary = Color(0xFF3453CC)
@@ -63,7 +64,14 @@ val md_theme_dark_surfaceTint = Color(0xFFB8C3FF)
 val md_theme_dark_outlineVariant = Color(0xFF45464F)
 val md_theme_dark_scrim = Color(0xFF000000)
 
-val secondary_color = Color(0xFFF1F4FF)
+
+class AlternativeColorScheme() {
+    companion object {
+        val secondary_color = Color(0xFFF1F4FF)
+
+        val green = Color(0xFF00A41A)
+    }
+}
 
 
 val seed = Color(0xFF1F41BB)
