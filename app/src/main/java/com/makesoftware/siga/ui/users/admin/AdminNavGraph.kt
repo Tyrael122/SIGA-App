@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.makesoftware.siga.MainRoutes
+import com.makesoftware.siga.StartDestinations
 import com.makesoftware.siga.ui.users.admin.screens.dataview.AdminCourseScreen
 import com.makesoftware.siga.ui.users.admin.screens.dataview.AdminHomeScreen
 import com.makesoftware.siga.ui.users.admin.screens.dataview.AdminStudentScreen
@@ -36,7 +37,7 @@ fun AdminNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AdminRoutes.STUDENT_FORM,
+        startDestination = StartDestinations.ADMIN,
         route = MainRoutes.ADMIN_SPACE,
         modifier = modifier.padding(paddingValues)
     ) {

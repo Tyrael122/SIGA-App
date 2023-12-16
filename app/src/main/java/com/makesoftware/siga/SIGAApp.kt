@@ -12,12 +12,20 @@ import com.makesoftware.siga.ui.users.admin.AdminSpace
 import com.makesoftware.siga.ui.commons.login.LoginFormScreen
 import com.makesoftware.siga.ui.commons.login.WelcomeScreen
 import com.makesoftware.siga.ui.theme.SIGATheme
+import com.makesoftware.siga.ui.users.admin.AdminRoutes
 
 class MainRoutes {
     companion object {
         const val LOGIN_FORM = "loginform"
         const val WELCOME_SCREEN = "WelcomeScreen"
         const val ADMIN_SPACE = "AdminSpace"
+    }
+}
+
+class StartDestinations {
+    companion object {
+        const val ADMIN = AdminRoutes.HOME
+        const val APP = MainRoutes.WELCOME_SCREEN
     }
 }
 
@@ -29,7 +37,7 @@ fun SIGAApp(modifier: Modifier = Modifier) {
         ) {
             val navController = rememberNavController()
 
-            NavHost(navController = navController, startDestination = MainRoutes.ADMIN_SPACE) {
+            NavHost(navController = navController, startDestination = StartDestinations.APP) {
                 composable(MainRoutes.WELCOME_SCREEN) {
                     WelcomeScreen(onLogin = {
                         navController.navigate(MainRoutes.LOGIN_FORM)
@@ -37,14 +45,11 @@ fun SIGAApp(modifier: Modifier = Modifier) {
                 }
 
                 composable(MainRoutes.LOGIN_FORM) {
-                    LoginFormScreen(
-                        onPasswordReset = {
-                            navController.navigate(MainRoutes.ADMIN_SPACE) // TODO: Navigate to password reset
-                        },
-                        onLogin = {
-                            navController.navigate(MainRoutes.ADMIN_SPACE) // TODO: Navigate to each user's space
-                        }
-                    )
+                    LoginFormScreen(onPasswordReset = {
+                        navController.navigate(MainRoutes.ADMIN_SPACE) // TODO: Navigate to password reset
+                    }, onLogin = {
+                        navController.navigate(MainRoutes.ADMIN_SPACE) // TODO: Navigate to each user's space
+                    })
                 }
 
                 composable(MainRoutes.ADMIN_SPACE) {

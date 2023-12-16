@@ -91,14 +91,14 @@ fun AppBarTitle(items: List<NavigationItem>, currentRoute: String, modifier: Mod
 
     if (currentRoute == AdminRoutes.COURSE_FORM) {
         AppBarTitleText(
-            text = "Cadastro\nde Curso", style = alternativeTypography.bodyLarge, modifier = modifier
+            text = "Cadastro\n de Curso", style = alternativeTypography.bodyLarge, modifier = modifier
         )
     }
 
 
     if (currentRoute == AdminRoutes.STUDENT_FORM) {
         AppBarTitleText(
-            text = "Cadastro\nde Aluno", style = alternativeTypography.bodyLarge, modifier = modifier
+            text = "Cadastro\n de Aluno", style = alternativeTypography.bodyLarge, modifier = modifier
         )
     }
 }

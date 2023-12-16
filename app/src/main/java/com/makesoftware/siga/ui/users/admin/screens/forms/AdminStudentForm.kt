@@ -51,7 +51,6 @@ fun AdminStudentForm(
             options = cursos,
             selectedOptionText = selectedOptionText,
             onSelectionChanged = { selectedOptionText = it },
-            isSearchable = false,
             placeholder = { Text("Selecione um curso") },
         )
 

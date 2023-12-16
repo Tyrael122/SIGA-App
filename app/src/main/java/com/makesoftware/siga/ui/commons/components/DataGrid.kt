@@ -208,7 +208,7 @@ fun SearchTextField(modifier: Modifier = Modifier) {
                 text = it
             },
             textStyle = DataGridTypograhpy.bodyLarge.copy(fontWeight = FontWeight.Normal),
-            placeholderText = "Search...",
+            placeholderText = "Pesquisar...",
             leadingIcon = {
                 Icon(
                     Icons.Filled.Search,

@@ -31,8 +31,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
@@ -154,22 +157,27 @@ fun FormDropdownMenu(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    val filteredOptions = if (isSearchable) {
-        options.filter { it.startsWith(selectedOptionText, ignoreCase = true) }
-    } else {
-        options
-    }
-
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = it },
         modifier = modifier,
     ) {
+
+        val focusRequester = remember { FocusRequester() }
+        val focusManager = LocalFocusManager.current
+
+        val filteredOptions = if (isSearchable) {
+            options.filter { it.contains(selectedOptionText, ignoreCase = true) }
+        } else {
+            options
+        }
+
         OutlinedTextField(
             modifier = Modifier
                 .menuAnchor()
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(10.dp))
+                .focusRequester(focusRequester)
                 .onFocusChanged {
                     expanded = it.isFocused
 
@@ -199,8 +207,9 @@ fun FormDropdownMenu(
                     DropdownMenuItem(
                         text = { Text(selectionOption) },
                         onClick = {
-                            onSelectionChanged(selectionOption)
                             expanded = false
+                            focusManager.clearFocus()
+                            onSelectionChanged(selectionOption)
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                     )
