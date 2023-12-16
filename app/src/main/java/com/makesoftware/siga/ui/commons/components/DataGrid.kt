@@ -123,14 +123,12 @@ private fun LazyItemGrid(
                 val dataGridRowContent = items[index]
                 val columnContentMap = generateColumnContentMap(columns, dataGridRowContent)
 
-                DataGridRow(
-                    columnContentMap = columnContentMap,
+                DataGridRow(columnContentMap = columnContentMap,
                     modifier = Modifier
                         .heightIn(min = 60.dp)
                         .background(backgroundColor)
                         .clickable { onItemClick(index) }
-                        .padding(horizontal = 12.dp)
-                )
+                        .padding(horizontal = 12.dp))
             }
         }
     }
@@ -209,9 +207,11 @@ fun SearchTextField(modifier: Modifier = Modifier) {
 
         var text by remember { mutableStateOf("") }
 
-        BasicFilledTextField(
+        DefaultOutlinedTextField(
             value = text,
-            onValueChange = { text = it }, // TODO: Do search here.
+            onValueChange = {
+                text = it
+            },
             textStyle = DataGridTypograhpy.bodyLarge.copy(fontWeight = FontWeight.Normal),
             placeholderText = "Search...",
             leadingIcon = {
@@ -227,61 +227,14 @@ fun SearchTextField(modifier: Modifier = Modifier) {
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
             ),
+            contentPadding = PaddingValues(horizontal = 10.dp),
+            unfocusedBorderThickness = 0.dp,
+            focusedBorderThickness = 0.dp,
             modifier = Modifier
                 .weight(1f)
                 .shadow(1.dp, RoundedCornerShape(10.dp))
         )
-    }
-}
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BasicFilledTextField(
-    value: String,
-    modifier: Modifier = Modifier,
-    placeholderText: String = "",
-    onValueChange: (String) -> Unit,
-    textStyle: TextStyle,
-    shape: RoundedCornerShape = RoundedCornerShape(10.dp),
-    leadingIcon: @Composable (() -> Unit)? = null,
-    colors: TextFieldColors = TextFieldDefaults.textFieldColors(),
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    singleLine: Boolean = true,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    interactionSource: InteractionSource = remember { MutableInteractionSource() },
-    enabled: Boolean = true,
-    isError: Boolean = false,
-) {
-    BasicTextField(
-        value = value,
-        onValueChange = onValueChange,
-        textStyle = textStyle,
-        modifier = modifier.fillMaxWidth()
-    ) {
-        TextFieldDefaults.TextFieldDecorationBox(
-            value = value,
-            innerTextField = it,
-            contentPadding = contentPadding,
-            enabled = true,
-            singleLine = singleLine,
-            leadingIcon = leadingIcon,
-            visualTransformation = visualTransformation,
-            interactionSource = interactionSource,
-            colors = colors,
-            placeholder = {
-                Text(
-                    text = placeholderText, style = textStyle
-                )
-            },
-        ) {
-            TextFieldDefaults.FilledContainerBox(
-                enabled = enabled,
-                isError = isError,
-                interactionSource = interactionSource,
-                colors = colors,
-                shape = shape,
-            )
-        }
     }
 }
 

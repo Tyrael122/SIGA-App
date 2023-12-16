@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -26,11 +27,11 @@ import androidx.compose.ui.unit.dp
 import com.makesoftware.siga.ui.theme.secondary_color
 
 
-// TODO: Maybe merge with DataGrid's search text field
-// TODO: (URGENT!) Refactor this to provide a decent set of TextField components with decent APIs
-//  OutlinedTextField,
-//  FilledTextField, (reuse OutlinedTextField but pass 0 border width), to be used in DataGridSearch
-//  NumberOutlinedTextField.
+// TODO: Refactor this to provide a decent set of TextField components with decent APIs
+//  OutlinedTextField, DONE!
+//  FilledTextField, (reuse OutlinedTextField but pass 0 border width), to be used in DataGridSearch.
+//  The idea is to define a data class to hold all parameters for the textField components.
+//  NumberOutlinedTextField. DONE!
 
 //  They are all gonna use the same OutlinedTextField component, but with different parameters.
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +46,7 @@ fun DefaultOutlinedTextField(
     focusedBorderThickness: Dp = 2.dp,
     unfocusedBorderThickness: Dp = 1.dp,
     singleLine: Boolean = true,
+    leadingIcon: @Composable (() -> Unit)? = null,
     colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
         containerColor = containerColor,
         unfocusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -58,6 +60,10 @@ fun DefaultOutlinedTextField(
     contentPadding: PaddingValues = TextFieldDefaults.outlinedTextFieldPadding(),
     minLines: Int = 1,
 ) {
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+    )
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
@@ -75,6 +81,7 @@ fun DefaultOutlinedTextField(
             singleLine = singleLine,
             visualTransformation = visualTransformation,
             interactionSource = interactionSource,
+            leadingIcon = leadingIcon,
             contentPadding = contentPadding,
             placeholder = {
                 Text(
@@ -95,10 +102,9 @@ fun DefaultOutlinedTextField(
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DefaultNumberTextField(
+fun DefaultNumberOutlinedTextField(
     modifier: Modifier = Modifier,
     value: Int?,
     onValueChange: (Int?) -> Unit,

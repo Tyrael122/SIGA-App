@@ -46,7 +46,7 @@ fun FormNumberTextField(
             )
         )
 
-        DefaultNumberTextField(
+        DefaultNumberOutlinedTextField(
             value = value,
             onValueChange = onValueChange,
             maxCharCount = maxCharCount,

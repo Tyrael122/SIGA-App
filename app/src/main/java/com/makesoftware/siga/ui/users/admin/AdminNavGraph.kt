@@ -34,7 +34,7 @@ fun AdminNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AdminRoutes.COURSE_FORM,
+        startDestination = AdminRoutes.COURSES,
         route = MainRoutes.ADMIN_SPACE,
         modifier = modifier.padding(paddingValues)
     ) {
