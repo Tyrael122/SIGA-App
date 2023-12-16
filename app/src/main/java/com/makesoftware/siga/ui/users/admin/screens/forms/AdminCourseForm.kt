@@ -45,7 +45,20 @@ fun AdminCourseForm(onSaveCourse: () -> Unit) {
             FormNumberTextField(
                 value = quantidadeDeSemestres,
                 onValueChange = { quantidadeDeSemestres = it ?: 0 },
-                placeholderText = "Quantidade de semestres",
+                fieldDescription = "Quantidade de semestres",
+            )
+
+            var semestresParaFinalizacao by rememberSaveable { mutableIntStateOf(0) }
+            FormNumberTextField(
+                value = semestresParaFinalizacao,
+                onValueChange = { semestresParaFinalizacao = it ?: 0 },
+                fieldDescription = "Semestres para finalização",
+            )
+
+            FormSelectableDataGrid(
+                infoText = "Disciplinas",
+                onClick = { /* TODO */ },
+                modifier = Modifier.padding(top = 30.dp)
             )
         }
 
@@ -53,4 +66,8 @@ fun AdminCourseForm(onSaveCourse: () -> Unit) {
             onClick = onSaveCourse, text = "Salvar", modifier = Modifier.padding(bottom = 15.dp)
         )
     }
+}
+
+@Composable
+fun FormSelectableDataGrid(infoText: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
 }

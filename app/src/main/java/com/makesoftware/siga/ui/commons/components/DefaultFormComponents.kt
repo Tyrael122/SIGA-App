@@ -20,10 +20,11 @@ import com.makesoftware.siga.ui.theme.secondary_color
 
 @Composable
 fun FormNumberTextField(
+    modifier: Modifier = Modifier,
     value: Int,
     onValueChange: (Int?) -> Unit,
-    placeholderText: String,
-    modifier: Modifier = Modifier
+    fieldDescription: String,
+    maxCharCount: Int = 2,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -40,7 +41,7 @@ fun FormNumberTextField(
             .padding(horizontal = 15.dp)
     ) {
         Text(
-            text = placeholderText, style = MaterialTheme.typography.bodyLarge.copy(
+            text = fieldDescription, style = MaterialTheme.typography.bodyLarge.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         )
@@ -48,7 +49,7 @@ fun FormNumberTextField(
         DefaultNumberTextField(
             value = value,
             onValueChange = onValueChange,
-            placeholderText = "0",
+            maxCharCount = maxCharCount,
             modifier = Modifier.width(40.dp),
         )
     }

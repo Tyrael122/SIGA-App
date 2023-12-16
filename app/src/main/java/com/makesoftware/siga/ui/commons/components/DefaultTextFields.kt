@@ -56,7 +56,7 @@ fun DefaultOutlinedTextField(
     keyboardActions: KeyboardActions = KeyboardActions(),
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     contentPadding: PaddingValues = TextFieldDefaults.outlinedTextFieldPadding(),
-    minLines: Int = 1, // TODO: Allow for passing a placeholder as a composable function instead of a text.
+    minLines: Int = 1,
 ) {
     BasicTextField(
         value = value,
@@ -99,17 +99,25 @@ fun DefaultOutlinedTextField(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DefaultNumberTextField(
+    modifier: Modifier = Modifier,
     value: Int?,
     onValueChange: (Int?) -> Unit,
-    placeholderText: String,
-    modifier: Modifier = Modifier
+    maxCharCount: Int = Int.MAX_VALUE
 ) {
-    // TODO: Fix placeholder alignment or disable it.
     DefaultOutlinedTextField(
         modifier = modifier.heightIn(min = 40.dp),
-        value = if (value == null || value == 0) "" else value.toString(),
-        placeholderText = placeholderText,
-        onValueChange = { onValueChange(it.toIntOrNull()) },
+        value = value?.toString() ?: "",
+        onValueChange = {
+            if (it.length > maxCharCount) {
+                return@DefaultOutlinedTextField
+            }
+
+            if (value == 0) {
+                onValueChange(it.replace("0", "").toIntOrNull())
+            } else {
+                onValueChange(it.toIntOrNull())
+            }
+        },
         textStyle = MaterialTheme.typography.bodyLarge.copy(textAlign = TextAlign.Center),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             containerColor = MaterialTheme.colorScheme.surface,
