@@ -8,7 +8,7 @@ import com.makesoftware.siga.ui.commons.DataGridRowContent
 import com.makesoftware.siga.ui.users.admin.AdminDataViewScreen
 
 @Composable
-fun AdminCourseScreen(modifier: Modifier = Modifier) {
+fun AdminCourseScreen(onAddCourse: () -> Unit, modifier: Modifier = Modifier) {
     AdminDataViewScreen(
         columns = listOf(
             DataGridColumnProperties("Nome", 2F, TextAlign.Start),
@@ -31,7 +31,7 @@ fun AdminCourseScreen(modifier: Modifier = Modifier) {
                 )
             ),
         ),
-        onAddEntity = { /* TODO */ },
+        onAddEntity = onAddCourse,
         modifier = modifier
     )
 }

@@ -1,6 +1,7 @@
 package com.makesoftware.siga.ui.commons
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -50,6 +51,7 @@ import com.makesoftware.siga.ui.theme.secondary_color
 @Composable
 fun DataGrid(
     modifier: Modifier = Modifier,
+    onItemClick: (Int) -> Unit = {},
     backgroundColor: Color = secondary_color,
     items: List<DataGridRowContent>,
     columns: List<DataGridColumnProperties>
@@ -72,7 +74,7 @@ fun DataGrid(
             Spacer(Modifier.height(20.dp))
 
             LazyItemGrid(
-                items = items, columns = columns
+                items = items, columns = columns, onItemClick = onItemClick,
             )
         }
     }
@@ -97,6 +99,7 @@ private fun SearchBar(modifier: Modifier = Modifier) {
 @Composable
 private fun LazyItemGrid(
     modifier: Modifier = Modifier,
+    onItemClick: (Int) -> Unit,
     columns: List<DataGridColumnProperties>,
     items: List<DataGridRowContent>
 ) {
@@ -125,6 +128,7 @@ private fun LazyItemGrid(
                     modifier = Modifier
                         .heightIn(min = 60.dp)
                         .background(backgroundColor)
+                        .clickable { onItemClick(index) }
                         .padding(horizontal = 12.dp)
                 )
             }

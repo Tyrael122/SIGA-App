@@ -15,12 +15,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.makesoftware.siga.ui.commons.AppSpace
 import com.makesoftware.siga.ui.commons.NavigationItem
 import com.makesoftware.siga.ui.commons.createNavigationItem
+import com.makesoftware.siga.ui.theme.alternativeTypography
 
 @Composable
 fun AdminSpace(onLogout: () -> Unit) {
@@ -37,7 +40,20 @@ fun AdminSpace(onLogout: () -> Unit) {
         currentRoute = destination.route ?: AdminRoutes.HOME
     })
 
-    val items = listOf(
+    val navigationItems = createNavigationItems(navController)
+
+    AppSpace(items = navigationItems, currentRoute = currentRoute, onLogout = onLogout, topAppBarTitle = {
+        AppBarTitle(
+            items = navigationItems,
+            currentRoute = currentRoute,
+        )
+    }) {
+        AdminNavGraph(navController, it)
+    }
+}
+
+fun createNavigationItems(navController: NavHostController): List<NavigationItem> {
+    return listOf(
         createNavigationItem(label = "Home",
             route = AdminRoutes.HOME,
             imageVector = Icons.Outlined.Home,
@@ -63,24 +79,32 @@ fun AdminSpace(onLogout: () -> Unit) {
             imageVector = Icons.Outlined.Backpack,
             onClick = { navController.navigate(it) }),
     )
-
-    AppSpace(items = items, currentRoute = currentRoute, onLogout = onLogout, topAppBarTitle = {
-        AppBarTitle(
-            items = items,
-            currentRoute = currentRoute,
-        )
-    }) {
-        AdminNavGraph(navController, it)
-    }
 }
 
 @Composable
 fun AppBarTitle(items: List<NavigationItem>, currentRoute: String, modifier: Modifier = Modifier) {
     val selectedIndex = items.indexOfFirst { it.route == currentRoute }
+    if (selectedIndex != -1) {
+        AppBarTitleText(text = items[selectedIndex].label, modifier = modifier)
+        return
+    }
 
+    if (currentRoute == AdminRoutes.COURSE_FORM) {
+        AppBarTitleText(
+            text = "Cadastro\nde Curso", style = alternativeTypography.bodyLarge, modifier = modifier
+        )
+    }
+}
+
+@Composable
+fun AppBarTitleText(
+    modifier: Modifier = Modifier,
+    text: String,
+    style: TextStyle = MaterialTheme.typography.headlineLarge,
+) {
     Text(
-        text = items[selectedIndex].label,
-        style = MaterialTheme.typography.headlineLarge,
+        text = text,
+        style = style,
         fontWeight = FontWeight.Bold,
         modifier = modifier.padding(top = 10.dp)
     )
