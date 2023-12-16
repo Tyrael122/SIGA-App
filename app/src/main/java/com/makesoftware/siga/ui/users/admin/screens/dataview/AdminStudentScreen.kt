@@ -9,7 +9,7 @@ import com.makesoftware.siga.ui.users.admin.AdminDataViewScreen
 
 
 @Composable
-fun AdminStudentScreen(modifier: Modifier = Modifier) {
+fun AdminStudentScreen(modifier: Modifier = Modifier, onAddStudent: () -> Unit) {
     AdminDataViewScreen(
         columns = listOf(
             DataGridColumnProperties("Nome", 2F, TextAlign.Start),
@@ -33,7 +33,7 @@ fun AdminStudentScreen(modifier: Modifier = Modifier) {
                 )
             ),
         ),
-        onAddEntity = { /* TODO */ },
+        onAddEntity = onAddStudent,
         modifier = modifier
     )
 }

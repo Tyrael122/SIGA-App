@@ -15,11 +15,13 @@ import com.makesoftware.siga.ui.users.admin.screens.dataview.AdminStudentScreen
 import com.makesoftware.siga.ui.users.admin.screens.dataview.AdminSubjectScreen
 import com.makesoftware.siga.ui.users.admin.screens.dataview.AdminTeacherScreen
 import com.makesoftware.siga.ui.users.admin.screens.forms.AdminCourseForm
+import com.makesoftware.siga.ui.users.admin.screens.forms.AdminStudentForm
 
 
 class AdminRoutes {
     companion object {
         const val COURSE_FORM = "AdminCourseForm"
+        const val STUDENT_FORM = "AdminStudentForm"
         const val COURSES = "Cursos"
         const val SUBJECTS = "Materias"
         const val STUDENTS = "Alunos"
@@ -34,7 +36,7 @@ fun AdminNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AdminRoutes.COURSE_FORM,
+        startDestination = AdminRoutes.STUDENT_FORM,
         route = MainRoutes.ADMIN_SPACE,
         modifier = modifier.padding(paddingValues)
     ) {
@@ -47,6 +49,14 @@ fun AdminNavGraph(
                 // TODO: Actually save the course
                 // TODO: Show a toast message saying that the course was saved
             }, commitButtonText = "Salvar"
+            )
+        }
+
+        // TODO: Create the student form functions.
+        composable(AdminRoutes.STUDENT_FORM) {
+            AdminStudentForm(onSelectSubjectsRequest = {},
+                onCommitRequest = {},
+                commitButtonText = "Salvar"
             )
         }
     }
@@ -74,6 +84,8 @@ fun NavGraphBuilder.adminDataview(
     }
 
     composable(AdminRoutes.STUDENTS) {
-        AdminStudentScreen()
+        AdminStudentScreen(onAddStudent = {
+            navController.navigate(AdminRoutes.STUDENT_FORM)
+        })
     }
 }

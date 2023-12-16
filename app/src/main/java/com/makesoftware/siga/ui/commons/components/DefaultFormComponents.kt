@@ -12,15 +12,30 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowCircleRight
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.PopupProperties
 import com.makesoftware.siga.ui.theme.AlternativeColorScheme
 import com.makesoftware.siga.ui.theme.alternativeTypography
 
@@ -119,5 +134,91 @@ fun FormSelectableDataGrid(
             }
         }
 
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FormDropdownMenu(
+    modifier: Modifier = Modifier,
+    options: List<String>,
+    selectedOptionText: String,
+    onSelectionChanged: (String) -> Unit,
+    isSearchable: Boolean = true,
+    textFieldColors: TextFieldColors = ExposedDropdownMenuDefaults.textFieldColors(
+        containerColor = AlternativeColorScheme.secondary_color,
+        unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+    ),
+    textFieldShape: Shape = RoundedCornerShape(10.dp),
+    placeholder: @Composable (() -> Unit)?,
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    val filteredOptions = if (isSearchable) {
+        options.filter { it.startsWith(selectedOptionText, ignoreCase = true) }
+    } else {
+        options
+    }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier,
+    ) {
+        OutlinedTextField(
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp))
+                .onFocusChanged {
+                    expanded = it.isFocused
+
+                    if (!filteredOptions.contains(selectedOptionText)) {
+                        onSelectionChanged("")
+                    }
+                },
+            value = selectedOptionText,
+            readOnly = !isSearchable,
+            onValueChange = onSelectionChanged,
+            placeholder = placeholder,
+            shape = textFieldShape,
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = textFieldColors,
+        )
+
+        if (filteredOptions.isNotEmpty()) {
+            DropdownMenu(
+                modifier = Modifier.exposedDropdownSize(true),
+                properties = createPopUpProperties(isSearchable),
+                expanded = expanded,
+                onDismissRequest = {
+                    expanded = false
+                },
+            ) {
+                filteredOptions.forEach { selectionOption ->
+                    DropdownMenuItem(
+                        text = { Text(selectionOption) },
+                        onClick = {
+                            onSelectionChanged(selectionOption)
+                            expanded = false
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    )
+                }
+            }
+        }
+    }
+}
+
+fun createPopUpProperties(isSearchable: Boolean): PopupProperties {
+    return if (isSearchable) {
+        PopupProperties(
+            focusable = false,
+            dismissOnClickOutside = false // This is false because the loss of focus is handled by the TextField. (See onFocusChanged)
+        )
+    } else {
+        PopupProperties(
+            focusable = true, dismissOnClickOutside = true, dismissOnBackPress = true
+        )
     }
 }

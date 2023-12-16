@@ -94,6 +94,13 @@ fun AppBarTitle(items: List<NavigationItem>, currentRoute: String, modifier: Mod
             text = "Cadastro\nde Curso", style = alternativeTypography.bodyLarge, modifier = modifier
         )
     }
+
+
+    if (currentRoute == AdminRoutes.STUDENT_FORM) {
+        AppBarTitleText(
+            text = "Cadastro\nde Aluno", style = alternativeTypography.bodyLarge, modifier = modifier
+        )
+    }
 }
 
 @Composable
