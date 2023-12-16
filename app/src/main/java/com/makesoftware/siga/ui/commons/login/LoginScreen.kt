@@ -1,8 +1,6 @@
 package com.makesoftware.siga.ui.commons.login
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.interaction.InteractionSource
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,32 +8,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.makesoftware.siga.R
-import com.makesoftware.siga.ui.commons.DefaultElevatedButton
+import com.makesoftware.siga.ui.commons.components.DefaultElevatedButton
+import com.makesoftware.siga.ui.commons.components.DefaultOutlinedTextField
 import com.makesoftware.siga.ui.theme.alternativeTypography
-import com.makesoftware.siga.ui.theme.secondary_color
 
 @Composable
 fun WelcomeScreen(onLogin: () -> Unit, modifier: Modifier = Modifier) {
@@ -71,7 +62,9 @@ fun WelcomeScreen(onLogin: () -> Unit, modifier: Modifier = Modifier) {
             )
         }
 
-        DefaultElevatedButton(onClick = onLogin, text = "Entrar")
+        DefaultElevatedButton(
+            onClick = onLogin, text = "Entrar", modifier = Modifier.padding(bottom = 76.dp)
+        )
     }
 }
 
@@ -98,7 +91,9 @@ fun LoginFormScreen(
             )
         }
 
-        DefaultElevatedButton(onClick = onLogin, text = "Entrar")
+        DefaultElevatedButton(
+            onClick = onLogin, text = "Entrar", modifier = Modifier.padding(bottom = 76.dp)
+        )
     }
 }
 
@@ -125,15 +120,20 @@ private fun LoginHeaderText(modifier: Modifier = Modifier) {
 private fun LoginForm(modifier: Modifier = Modifier, onPasswordReset: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
         var login by rememberSaveable { mutableStateOf("") }
-        DefaultOutlinedTextField(value = login, placeholderText = "Login", onValueChange = { login = it })
+        LoginTextField(
+            value = login,
+            placeholderText = "Login",
+            onValueChange = { login = it },
+        )
 
         Spacer(Modifier.height(30.dp))
 
         var password by rememberSaveable { mutableStateOf("") }
-        DefaultOutlinedTextField(
+        LoginTextField(
             value = password,
             placeholderText = "Senha",
-            onValueChange = { password = it })
+            onValueChange = { password = it },
+        )
 
         TextButton(onClick = onPasswordReset, Modifier.align(Alignment.End)) {
             Text(text = "Esqueceu sua senha?", style = MaterialTheme.typography.bodyMedium)
@@ -141,52 +141,14 @@ private fun LoginForm(modifier: Modifier = Modifier, onPasswordReset: () -> Unit
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DefaultOutlinedTextField(
-    value: String,
-    placeholderText: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
-    containerColor: Color = secondary_color,
-    singleLine: Boolean = true,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    interactionSource: InteractionSource = remember { MutableInteractionSource() },
-    enabled: Boolean = true,
-    isError: Boolean = false,
-) {
-    BasicTextField(
+fun LoginTextField(value: String, onValueChange: (String) -> Unit, placeholderText: String) {
+    DefaultOutlinedTextField(
+        modifier = Modifier.fillMaxWidth(),
         value = value,
+        placeholderText = placeholderText,
         onValueChange = onValueChange,
-        textStyle = textStyle,
-        modifier = modifier.fillMaxWidth()
-    ) {
-        TextFieldDefaults.OutlinedTextFieldDecorationBox(
-            value = value,
-            innerTextField = it,
-            enabled = true,
-            singleLine = singleLine,
-            visualTransformation = visualTransformation,
-            interactionSource = interactionSource,
-            placeholder = {
-                Text(
-                    text = placeholderText, style = textStyle
-                )
-            },
-        ) {
-            TextFieldDefaults.OutlinedBorderContainerBox(
-                enabled = enabled,
-                isError = isError,
-                interactionSource = interactionSource,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    containerColor = containerColor,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                ),
-                focusedBorderThickness = 4.dp,
-                unfocusedBorderThickness = 2.dp
-            )
-        }
-    }
+        focusedBorderThickness = 4.dp,
+        unfocusedBorderThickness = 2.dp,
+    )
 }
-

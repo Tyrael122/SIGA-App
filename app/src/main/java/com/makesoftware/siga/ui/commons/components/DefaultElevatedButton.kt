@@ -1,4 +1,4 @@
-package com.makesoftware.siga.ui.commons
+package com.makesoftware.siga.ui.commons.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,7 +24,6 @@ fun DefaultElevatedButton(onClick: () -> Unit, text: String, modifier: Modifier 
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 76.dp)
-            .padding(bottom = 76.dp)
             .height(60.dp)
             .widthIn(max = 245.dp)
     ) {

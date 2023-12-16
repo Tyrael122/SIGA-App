@@ -1,4 +1,4 @@
-package com.makesoftware.siga.ui.commons
+package com.makesoftware.siga.ui.commons.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

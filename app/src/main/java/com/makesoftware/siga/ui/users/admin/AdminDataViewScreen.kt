@@ -12,9 +12,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.makesoftware.siga.ui.commons.DataGrid
-import com.makesoftware.siga.ui.commons.DataGridColumnProperties
-import com.makesoftware.siga.ui.commons.DataGridRowContent
+import com.makesoftware.siga.ui.commons.components.DataGrid
+import com.makesoftware.siga.ui.commons.components.DataGridColumnProperties
+import com.makesoftware.siga.ui.commons.components.DataGridRowContent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
