@@ -1,4 +1,4 @@
-package com.makesoftware.siga.ui.users.admin.screens.dataview
+package com.makesoftware.siga.ui.users.admin.screens.dataviews
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

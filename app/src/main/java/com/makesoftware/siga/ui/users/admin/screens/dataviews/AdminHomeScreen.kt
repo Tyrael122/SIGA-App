@@ -1,4 +1,4 @@
-package com.makesoftware.siga.ui.users.admin.screens.dataview
+package com.makesoftware.siga.ui.users.admin.screens.dataviews
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text

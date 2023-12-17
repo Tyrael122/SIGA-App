@@ -26,6 +26,8 @@ class StartDestinations {
     companion object {
         const val ADMIN = AdminRoutes.HOME
         const val APP = MainRoutes.WELCOME_SCREEN
+//        const val ADMIN = AdminRoutes.STUDENT_FORM
+//        const val APP = MainRoutes.ADMIN_SPACE
     }
 }
 

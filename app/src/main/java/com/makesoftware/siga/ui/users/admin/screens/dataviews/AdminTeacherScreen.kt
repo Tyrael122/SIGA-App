@@ -1,4 +1,4 @@
-package com.makesoftware.siga.ui.users.admin.screens.dataview
+package com.makesoftware.siga.ui.users.admin.screens.dataviews
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,31 +9,31 @@ import com.makesoftware.siga.ui.users.admin.AdminDataViewScreen
 
 
 @Composable
-fun AdminStudentScreen(modifier: Modifier = Modifier, onAddStudent: () -> Unit) {
+fun AdminTeacherScreen(modifier: Modifier = Modifier) {
     AdminDataViewScreen(
         columns = listOf(
             DataGridColumnProperties("Nome", 2F, TextAlign.Start),
-            DataGridColumnProperties("Curso", 1F, TextAlign.Left),
-            DataGridColumnProperties("Semestre", 1F, TextAlign.Center)
+            DataGridColumnProperties("Nível", 1.5F, TextAlign.Center),
+            DataGridColumnProperties("Idade", 0.7F, TextAlign.Center),
         ),
         items = listOf(
             DataGridRowContent(
                 listOf(
-                    "Kauan Borges", "ADS", "1"
+                    "Flávio Viotti", "Mestre", "35"
                 )
             ),
             DataGridRowContent(
                 listOf(
-                    "João Vitor", "COMEX", "2"
+                    "Rodrigo Amorim", "Doutor", "45"
                 )
             ),
             DataGridRowContent(
                 listOf(
-                    "Ana Clara", "SEGINFO", "3"
+                    "Humberto", "Faixa preta", "25"
                 )
             ),
         ),
-        onAddEntity = onAddStudent,
+        onAddEntity = { /* TODO */ },
         modifier = modifier
     )
 }
