@@ -1,8 +1,13 @@
 package com.makesoftware.siga.ui.users.admin
 
+import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -17,6 +22,8 @@ import com.makesoftware.siga.ui.users.admin.screens.dataviews.AdminSubjectScreen
 import com.makesoftware.siga.ui.users.admin.screens.dataviews.AdminTeacherScreen
 import com.makesoftware.siga.ui.users.admin.screens.forms.AdminCourseForm
 import com.makesoftware.siga.ui.users.admin.screens.forms.AdminStudentForm
+import com.makesoftware.siga.ui.users.admin.viewmodels.AdminViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 class AdminRoutes {
@@ -33,7 +40,10 @@ class AdminRoutes {
 
 @Composable
 fun AdminNavGraph(
-    navController: NavHostController, paddingValues: PaddingValues, modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    paddingValues: PaddingValues,
+    viewModel: AdminViewModel = viewModel(),
 ) {
     NavHost(
         navController = navController,
@@ -41,7 +51,7 @@ fun AdminNavGraph(
         route = MainRoutes.ADMIN_SPACE,
         modifier = modifier.padding(paddingValues)
     ) {
-        adminDataview(navController)
+        adminDataview(viewModel, navController)
 
         composable(AdminRoutes.COURSE_FORM) {
             AdminCourseForm(onSelectSubjectsRequest = {
@@ -64,16 +74,22 @@ fun AdminNavGraph(
 }
 
 fun NavGraphBuilder.adminDataview(
-    navController: NavHostController
+    viewModel: AdminViewModel, navController: NavHostController
 ) {
     composable(AdminRoutes.HOME) {
         AdminHomeScreen()
     }
 
     composable(AdminRoutes.COURSES) {
+        val courseUiState by viewModel.courseUiState.collectAsState()
+        Log.d("AdminNavGraph", "adminDataview: $courseUiState")
+        Log.d("AdminNavGraph", "isLoading: ${courseUiState.isLoading}")
+
         AdminCourseScreen(onAddCourse = {
             navController.navigate(AdminRoutes.COURSE_FORM)
-        })
+        }, courses = courseUiState.courses, fetchCourses = {
+            viewModel.fetchCourses()
+        }, isLoading = courseUiState.isLoading)
     }
 
     composable(AdminRoutes.SUBJECTS) {

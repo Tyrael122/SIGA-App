@@ -18,7 +18,15 @@ import com.makesoftware.siga.ui.commons.components.DataGridRowContent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminDataViewScreen(columns: List<DataGridColumnProperties>, items: List<DataGridRowContent>, onItemClick: (Int) -> Unit = {}, onAddEntity: () -> Unit, modifier: Modifier = Modifier) {
+fun AdminDataViewScreen(
+    modifier: Modifier = Modifier,
+    columns: List<DataGridColumnProperties>,
+    items: List<DataGridRowContent>,
+    onItemClick: (Int) -> Unit = {},
+    onAddEntity: () -> Unit,
+    fetchEntities: () -> Unit = {},
+    isLoading: Boolean = false,
+) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -31,19 +39,21 @@ fun AdminDataViewScreen(columns: List<DataGridColumnProperties>, items: List<Dat
             }
         }, modifier = modifier
     ) {
-        var itemsMultiplied = items
-        for (i in 0..10) {
-            itemsMultiplied = itemsMultiplied.plus(itemsMultiplied)
-        }
+        var  itemsMultiplied = items
+//        for (i in 0..1) {
+//            itemsMultiplied = itemsMultiplied.plus(itemsMultiplied)
+//        }
 
         DataGrid(
-            items = itemsMultiplied,
-            columns = columns,
-            onItemClick = { /* TODO */ },
             modifier = Modifier
                 .padding(it)
                 .padding(horizontal = 15.dp)
-                .padding(top = 30.dp, bottom = 15.dp)
+                .padding(top = 30.dp, bottom = 15.dp),
+            onItemClick = { /* TODO */ },
+            items = itemsMultiplied,
+            columns = columns,
+            fetchData = fetchEntities,
+            isLoading = isLoading
         )
     }
 }

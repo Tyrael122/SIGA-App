@@ -34,6 +34,6 @@ fun AdminSubjectScreen(modifier: Modifier = Modifier) {
             ),
         ),
         onAddEntity = { /* TODO */ },
-        modifier = modifier
+        modifier = modifier,
     )
 }

@@ -34,6 +34,6 @@ fun AdminTeacherScreen(modifier: Modifier = Modifier) {
             ),
         ),
         onAddEntity = { /* TODO */ },
-        modifier = modifier
+        modifier = modifier,
     )
 }
