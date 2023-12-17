@@ -15,17 +15,19 @@ import androidx.compose.ui.unit.dp
 import com.makesoftware.siga.ui.commons.components.DataGrid
 import com.makesoftware.siga.ui.commons.components.DataGridColumnProperties
 import com.makesoftware.siga.ui.commons.components.DataGridRowContent
+import com.makesoftware.siga.ui.users.admin.viewmodels.DataGridState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminDataViewScreen(
     modifier: Modifier = Modifier,
     columns: List<DataGridColumnProperties>,
-    items: List<DataGridRowContent>,
+    items: List<DataGridRowContent> = listOf(), // TODO: Remove this
     onItemClick: (Int) -> Unit = {},
     onAddEntity: () -> Unit,
     fetchEntities: () -> Unit = {},
-    isLoading: Boolean = false,
+    isLoading: Boolean = false, // TODO: Remove this
+    dataGridState: DataGridState = DataGridState.Loading, // TODO: Remove the default.
 ) {
     Scaffold(
         floatingActionButton = {
@@ -39,21 +41,15 @@ fun AdminDataViewScreen(
             }
         }, modifier = modifier
     ) {
-        var  itemsMultiplied = items
-//        for (i in 0..1) {
-//            itemsMultiplied = itemsMultiplied.plus(itemsMultiplied)
-//        }
-
         DataGrid(
             modifier = Modifier
                 .padding(it)
                 .padding(horizontal = 15.dp)
                 .padding(top = 30.dp, bottom = 15.dp),
             onItemClick = { /* TODO */ },
-            items = itemsMultiplied,
+            dataGridState = dataGridState,
             columns = columns,
             fetchData = fetchEntities,
-            isLoading = isLoading
         )
     }
 }

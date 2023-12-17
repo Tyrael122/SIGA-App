@@ -1,6 +1,5 @@
 package com.makesoftware.siga.ui.commons.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,19 +15,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterAlt
-import androidx.compose.material.icons.filled.FolderOff
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.FolderOff
+import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -42,10 +36,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,21 +48,19 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.makesoftware.siga.ui.theme.AlternativeColorScheme
 import com.makesoftware.siga.ui.theme.DataGridTypograhpy
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.makesoftware.siga.ui.users.admin.viewmodels.DataGridState
+import com.makesoftware.siga.ui.users.admin.viewmodels.ErrorType
 
 @Composable
 fun DataGrid(
     modifier: Modifier = Modifier,
     onItemClick: (Int) -> Unit = {},
     backgroundColor: Color = AlternativeColorScheme.secondary_color,
-    items: List<DataGridRowContent>,
     columns: List<DataGridColumnProperties>,
     fetchData: () -> Unit,
-    isLoading: Boolean,
+    dataGridState: DataGridState,
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -92,14 +82,11 @@ fun DataGrid(
             )
         }
 
-//        Spacer(Modifier.height(20.dp))
-
         ItemGrid(
-            items = items,
             columns = columns,
             onItemClick = onItemClick,
             fetchData = fetchData,
-            isLoading = isLoading
+            dataGridState = dataGridState,
         )
     }
 }
@@ -136,32 +123,41 @@ private fun ItemGrid(
     modifier: Modifier = Modifier,
     onItemClick: (Int) -> Unit,
     fetchData: () -> Unit,
-    isLoading: Boolean,
     columns: List<DataGridColumnProperties>,
-    items: List<DataGridRowContent>
+    dataGridState: DataGridState,
 ) {
+
+    val isLoading = dataGridState == DataGridState.Loading
 
     val pullRefreshState = rememberPullRefreshState(refreshing = isLoading, onRefresh = {
         fetchData()
     })
 
-    Box(modifier.pullRefresh(pullRefreshState)) {
+    Box(
+        modifier
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState)
+    ) {
+        when (dataGridState) {
+            is DataGridState.Error -> {
+                DataGridErrorIndicator(
+                    error = dataGridState,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                )
+            }
 
-        if (items.isEmpty()) {
-            NoContentIndicator(
-                text = "Sem registros.\nPuxe para atualizar.",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            )
-        }
-        else {
-            LazyItemGrid(
-                items = items,
-                columns = columns,
-                onItemClick = onItemClick,
-                modifier = Modifier.fillMaxSize()
-            )
+            is DataGridState.Success -> {
+                LazyItemGrid(
+                    items = dataGridState.items,
+                    columns = columns,
+                    onItemClick = onItemClick,
+                )
+            }
+
+            else -> {} // Do nothing here. The pull refresh indicator should be shown.
         }
 
         PullRefreshIndicator(isLoading, pullRefreshState, Modifier.align(Alignment.TopCenter))
@@ -169,34 +165,13 @@ private fun ItemGrid(
 }
 
 @Composable
-fun NoContentIndicator(
-    modifier: Modifier = Modifier,
-    text: String = "Sem registros.",
-    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = modifier,
-    ) {
-        Icon(
-            Icons.Outlined.FolderOff,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier
-                .fillMaxWidth(.25F)
-                .aspectRatio(1F)
-        )
-
-        Spacer(Modifier.height(10.dp))
-
-        Text(
-            text = text,
-            style = textStyle.copy(
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 20.sp
-            ),
+private fun DataGridErrorIndicator(modifier: Modifier = Modifier, error: DataGridState.Error) {
+    when (error.errorType) {
+        ErrorType.NO_NETWORK -> NoInternetIndicator(modifier = modifier)
+        ErrorType.UNKNOWN -> IconIndicator(
+            modifier = modifier,
+            text = error.message,
+            icon = Icons.Outlined.ErrorOutline,
         )
     }
 }
@@ -209,9 +184,17 @@ private fun LazyItemGrid(
     onItemClick: (Int) -> Unit
 ) {
     LazyColumn(
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     ) {
 
+        if (items.isEmpty()) {
+            item {
+                NoContentIndicator(
+                    text = "Sem registros.\nPuxe para baixo para atualizar.",
+                    modifier = Modifier.fillParentMaxSize()
+                )
+            }
+        }
 
         items(items.size) { index ->
             val backgroundColor =
@@ -259,7 +242,6 @@ private fun DataGridRow(
     }
 }
 
-// TODO: Maybe add a padding property in the future.
 data class DataGridColumnProperties(
     val name: String, val weight: Float, val textAlign: TextAlign = TextAlign.Start
 )

@@ -1,14 +1,12 @@
 package com.makesoftware.siga.ui.users.admin
 
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -26,7 +24,7 @@ import com.makesoftware.siga.ui.users.admin.viewmodels.AdminViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 
-class AdminRoutes {
+sealed class AdminRoutes {
     companion object {
         const val COURSE_FORM = "AdminCourseForm"
         const val STUDENT_FORM = "AdminStudentForm"
@@ -82,14 +80,13 @@ fun NavGraphBuilder.adminDataview(
 
     composable(AdminRoutes.COURSES) {
         val courseUiState by viewModel.courseUiState.collectAsState()
-        Log.d("AdminNavGraph", "adminDataview: $courseUiState")
-        Log.d("AdminNavGraph", "isLoading: ${courseUiState.isLoading}")
+        val context = LocalContext.current
 
         AdminCourseScreen(onAddCourse = {
             navController.navigate(AdminRoutes.COURSE_FORM)
-        }, courses = courseUiState.courses, fetchCourses = {
-            viewModel.fetchCourses()
-        }, isLoading = courseUiState.isLoading)
+        }, dataGridState = courseUiState.dataGridView, fetchCourses = {
+            viewModel.fetchCourses(context)
+        })
     }
 
     composable(AdminRoutes.SUBJECTS) {

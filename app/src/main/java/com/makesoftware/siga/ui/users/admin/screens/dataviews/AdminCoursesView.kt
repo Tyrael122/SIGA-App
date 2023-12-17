@@ -7,30 +7,23 @@ import com.makesoftware.siga.data.datasources.Course
 import com.makesoftware.siga.ui.commons.components.DataGridColumnProperties
 import com.makesoftware.siga.ui.commons.components.DataGridRowContent
 import com.makesoftware.siga.ui.users.admin.AdminDataViewScreen
+import com.makesoftware.siga.ui.users.admin.viewmodels.DataGridState
 
 @Composable
 fun AdminCourseScreen(
     modifier: Modifier = Modifier,
     onAddCourse: () -> Unit,
-    courses: List<Course>,
     fetchCourses: () -> Unit,
-    isLoading: Boolean
+    dataGridState: DataGridState
 ) {
-    val items = courses.map {
-        DataGridRowContent(
-            listOf(it.name, it.acronym)
-        )
-    }
-
     AdminDataViewScreen(
         columns = listOf(
             DataGridColumnProperties("Nome", 2F, TextAlign.Start),
             DataGridColumnProperties("Sigla", 1F, TextAlign.Center),
         ),
-        items = items,
+        dataGridState = dataGridState,
         onAddEntity = onAddCourse,
         fetchEntities = fetchCourses,
-        isLoading = isLoading,
         modifier = modifier
     )
 }
