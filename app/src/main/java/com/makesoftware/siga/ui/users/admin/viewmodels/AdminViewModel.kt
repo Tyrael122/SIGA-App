@@ -12,7 +12,6 @@ import com.makesoftware.siga.data.datasources.RemoteDataSource
 import com.makesoftware.siga.data.repositories.CoursesRepository
 import com.makesoftware.siga.data.repositories.TeachersRepository
 import com.makesoftware.siga.network.SIGAJavaApi
-import com.makesoftware.siga.ui.commons.components.DataGridRowContent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,56 +45,49 @@ class AdminViewModel : ViewModel() {
     private var fetchJob: Job? = null
 
     fun fetchCourses(context: Context) {
-        doFetchJob(updateDataGridState = { dataGridState ->
+        doFetchJob(updateFetchResult = { fetchResult ->
             _courseUiState.update {
-                it.copy(dataGridState = dataGridState)
+                it.copy(fetchResult = fetchResult)
             }
-        }, updateData = {
-            val courses = courseRepository.fetchCourses()
-            updateDataGridView(_courseUiState, courses) { uiState, dataGridState ->
-                uiState.copy(
-                    courses = courses, dataGridState = dataGridState
-                )
-            }
+        }, fetchData = {
+            courseRepository.fetchCourses()
         }, context = context)
     }
 
-    // Leave at that, for now. If it ever happens that this function becomes way too complex, then we can use reflection?
     fun fetchTeachers(context: Context) {
-        doFetchJob(updateDataGridState = { dataGridState ->
+        doFetchJob(updateFetchResult = { fetchResult ->
             _teacherUiState.update {
-                it.copy(dataGridState = dataGridState)
+                it.copy(fetchResult = fetchResult)
             }
-        }, updateData = {
-            val teachers = teacherRepository.fetchTeachers()
-            updateDataGridView(_teacherUiState, teachers) { uiState, dataGridState ->
-                uiState.copy(
-                    teachers = teachers, dataGridState = dataGridState
-                )
-            }
+        }, fetchData = {
+            teacherRepository.fetchTeachers()
         }, context = context)
     }
 
-    private fun doFetchJob(
-        updateDataGridState: (DataGridState) -> Unit,
-        updateData: suspend () -> Unit,
+    private fun <T> doFetchJob(
+        updateFetchResult: (FetchResult<T>) -> Unit,
+        fetchData: suspend () -> List<T>,
         context: Context
     ) {
         fetchJob?.cancel("Restarting fetch job")
 
-        if (!arePrerequisitesMet(updateDataGridState, context)) {
+        if (!arePrerequisitesMet(updateFetchResult, context)) {
             return
         }
 
-        updateDataGridState(DataGridState.Loading)
+        updateFetchResult(FetchResult.Loading())
 
         fetchJob = viewModelScope.launch {
             try {
-                updateData()
+                updateFetchResult(
+                    FetchResult.Success(
+                        items = fetchData()
+                    )
+                )
 
             } catch (ioe: IOException) {
-                updateDataGridState(
-                    DataGridState.Error(
+                updateFetchResult(
+                    FetchResult.Error(
                         ErrorType.UNKNOWN, "Oops. Algo deu errado. Tente novamente."
                     )
                 )
@@ -103,13 +95,12 @@ class AdminViewModel : ViewModel() {
         }
     }
 
-    private fun arePrerequisitesMet(
-        updateDataGridState: (DataGridState) -> Unit, context: Context
+    private fun <T> arePrerequisitesMet(
+        updateDataGridState: (FetchResult<T>) -> Unit, context: Context
     ): Boolean {
         if (!hasNetworkConnection(context)) {
-            // TODO: Make an interface or superclass for update data grid state.
             updateDataGridState(
-                DataGridState.Error(
+                FetchResult.Error(
                     ErrorType.NO_NETWORK, "Você não está conectado à internet."
                 )
             )
@@ -119,7 +110,6 @@ class AdminViewModel : ViewModel() {
         return true
     }
 }
-
 
 private fun hasNetworkConnection(context: Context): Boolean {
     val connectivityManager =
@@ -139,36 +129,22 @@ private fun hasNetworkConnection(context: Context): Boolean {
     return false
 }
 
-private fun <T> updateDataGridView(
-    mutableStateFlow: MutableStateFlow<T>,
-    items: List<DataGridView>,
-    update: (T, DataGridState) -> T
-) {
-    mutableStateFlow.update {
-        update(
-            it, DataGridState.Success(items.map { item ->
-                item.toDataGridView()
-            })
-        )
-    }
-}
-
 data class AdminTeacherUiState(
     val selectedTeacher: Teacher? = null,
-    val teachers: List<Teacher> = listOf(),
-    val dataGridState: DataGridState = DataGridState.Success(),
+    val fetchResult: FetchResult<Teacher> = FetchResult.Success(),
 )
 
 data class AdminCourseUiState(
     val selectedCourse: Course? = null,
-    val courses: List<Course> = listOf(),
-    val dataGridState: DataGridState = DataGridState.Success(),
+    val fetchResult: FetchResult<Course> = FetchResult.Success(),
 )
 
-sealed class DataGridState {
-    data class Success(val items: List<DataGridRowContent> = listOf()) : DataGridState()
-    object Loading : DataGridState()
-    data class Error(val errorType: ErrorType, val message: String) : DataGridState()
+// Out makes this accept subtypes of T,
+// so if I declare I want a FetchResult<DataGridView>, I can pass a FetchResult<Course> to it.
+sealed class FetchResult<out T> {
+    data class Success<T>(val items: List<T> = listOf()) : FetchResult<T>()
+    data class Loading<T>(val message: String = "") : FetchResult<T>()
+    data class Error<T>(val errorType: ErrorType, val message: String) : FetchResult<T>()
 }
 
 enum class ErrorType {

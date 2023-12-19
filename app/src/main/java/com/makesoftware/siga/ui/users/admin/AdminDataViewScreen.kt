@@ -12,10 +12,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.makesoftware.siga.data.DataGridView
 import com.makesoftware.siga.ui.commons.components.DataGrid
 import com.makesoftware.siga.ui.commons.components.DataGridColumnProperties
 import com.makesoftware.siga.ui.commons.components.DataGridRowContent
-import com.makesoftware.siga.ui.users.admin.viewmodels.DataGridState
+import com.makesoftware.siga.ui.users.admin.viewmodels.FetchResult
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,9 +26,9 @@ fun AdminDataViewScreen(
     items: List<DataGridRowContent> = listOf(), // TODO: Remove this
     onItemClick: (Int) -> Unit = {},
     onAddEntity: () -> Unit,
-    fetchEntities: () -> Unit = {},
+    fetchItems: () -> Unit = {},
     isLoading: Boolean = false, // TODO: Remove this
-    dataGridState: DataGridState = DataGridState.Loading, // TODO: Remove the default.
+    fetchResult: FetchResult<DataGridView> = FetchResult.Loading(), // TODO: Remove the default.
 ) {
     Scaffold(
         floatingActionButton = {
@@ -47,9 +48,9 @@ fun AdminDataViewScreen(
                 .padding(horizontal = 15.dp)
                 .padding(top = 30.dp, bottom = 15.dp),
             onItemClick = { /* TODO */ },
-            dataGridState = dataGridState,
+            fetchResult = fetchResult,
             columns = columns,
-            fetchData = fetchEntities,
+            fetchData = fetchItems,
         )
     }
 }

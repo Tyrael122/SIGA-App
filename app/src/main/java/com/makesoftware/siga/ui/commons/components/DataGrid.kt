@@ -48,9 +48,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.makesoftware.siga.data.DataGridView
 import com.makesoftware.siga.ui.theme.AlternativeColorScheme
 import com.makesoftware.siga.ui.theme.DataGridTypograhpy
-import com.makesoftware.siga.ui.users.admin.viewmodels.DataGridState
+import com.makesoftware.siga.ui.users.admin.viewmodels.FetchResult
 import com.makesoftware.siga.ui.users.admin.viewmodels.ErrorType
 
 @Composable
@@ -60,7 +61,7 @@ fun DataGrid(
     backgroundColor: Color = AlternativeColorScheme.secondary_color,
     columns: List<DataGridColumnProperties>,
     fetchData: () -> Unit,
-    dataGridState: DataGridState,
+    fetchResult: FetchResult<DataGridView>,
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -86,7 +87,7 @@ fun DataGrid(
             columns = columns,
             onItemClick = onItemClick,
             fetchData = fetchData,
-            dataGridState = dataGridState,
+            fetchResult = fetchResult,
         )
     }
 }
@@ -124,10 +125,10 @@ private fun ItemGrid(
     onItemClick: (Int) -> Unit,
     fetchData: () -> Unit,
     columns: List<DataGridColumnProperties>,
-    dataGridState: DataGridState,
+    fetchResult: FetchResult<DataGridView>,
 ) {
 
-    val isLoading = dataGridState == DataGridState.Loading
+    val isLoading = fetchResult is FetchResult.Loading
 
     val pullRefreshState = rememberPullRefreshState(refreshing = isLoading, onRefresh = {
         fetchData()
@@ -138,10 +139,10 @@ private fun ItemGrid(
             .fillMaxSize()
             .pullRefresh(pullRefreshState)
     ) {
-        when (dataGridState) {
-            is DataGridState.Error -> {
+        when (fetchResult) {
+            is FetchResult.Error -> {
                 DataGridErrorIndicator(
-                    error = dataGridState,
+                    error = fetchResult,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .fillMaxSize()
@@ -149,9 +150,9 @@ private fun ItemGrid(
                 )
             }
 
-            is DataGridState.Success -> {
+            is FetchResult.Success -> {
                 LazyItemGrid(
-                    items = dataGridState.items,
+                    items = fetchResult.items.map { it.toDataGridView() },
                     columns = columns,
                     onItemClick = onItemClick,
                 )
@@ -165,7 +166,7 @@ private fun ItemGrid(
 }
 
 @Composable
-private fun DataGridErrorIndicator(modifier: Modifier = Modifier, error: DataGridState.Error) {
+private fun <T> DataGridErrorIndicator(modifier: Modifier = Modifier, error: FetchResult.Error<T>) {
     when (error.errorType) {
         ErrorType.NO_NETWORK -> NoInternetIndicator(modifier = modifier)
         ErrorType.UNKNOWN -> IconIndicator(

@@ -84,7 +84,7 @@ fun NavGraphBuilder.adminDataview(
 
         AdminCourseScreen(onAddCourse = {
             navController.navigate(AdminRoutes.COURSE_FORM)
-        }, dataGridState = courseUiState.dataGridView, fetchCourses = {
+        }, fetchResult = courseUiState.fetchResult, fetchCourses = {
             viewModel.fetchCourses(context)
         })
     }
@@ -94,7 +94,14 @@ fun NavGraphBuilder.adminDataview(
     }
 
     composable(AdminRoutes.TEACHERS) {
-        AdminTeacherScreen()
+        val teacherUiState by viewModel.teacherUiState.collectAsState()
+        val context = LocalContext.current
+
+        AdminTeacherScreen(onAddTeachers = {},
+            fetchResult = teacherUiState.fetchResult,
+            fetchTeachers = {
+                viewModel.fetchTeachers(context)
+            })
     }
 
     composable(AdminRoutes.STUDENTS) {
