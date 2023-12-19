@@ -1,11 +1,13 @@
 package com.makesoftware.siga.data.datasources
 
+import com.makesoftware.siga.data.Course
+import com.makesoftware.siga.data.Teacher
 import com.makesoftware.siga.network.SIGAApi
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class CoursesRemoteDataSource(
+class RemoteDataSource(
     private val api: SIGAApi, private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
@@ -14,10 +16,10 @@ class CoursesRemoteDataSource(
             api.fetchCourses()
         }
     }
+
+    suspend fun fetchTeachers(): List<Teacher> {
+        return withContext(ioDispatcher) {
+            api.fetchTeachers()
+        }
+    }
 }
-
-
-data class Course(
-    val name: String,
-    val acronym: String,
-)
