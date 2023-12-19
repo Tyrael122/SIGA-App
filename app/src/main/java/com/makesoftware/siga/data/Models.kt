@@ -8,6 +8,7 @@ data class Teacher(
     val email: String? = null,
     val age: Int,
     val degree: String,
+    val isUpdate: Boolean = false,
 ) : DataGridView {
     override fun toDataGridView(): DataGridRowContent {
         return DataGridRowContent(
@@ -24,7 +25,9 @@ data class Course(
     val description: String = "",
     val semestersAmount: Int = 0,
     val semestersToFinish: Int = 0,
+    val isUpdate: Boolean = false,
 ) : DataGridView {
+
 
     override fun toDataGridView(): DataGridRowContent {
         return DataGridRowContent(

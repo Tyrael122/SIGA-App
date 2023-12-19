@@ -16,7 +16,7 @@ import com.makesoftware.siga.data.DataGridView
 import com.makesoftware.siga.ui.commons.components.DataGrid
 import com.makesoftware.siga.ui.commons.components.DataGridColumnProperties
 import com.makesoftware.siga.ui.commons.components.DataGridRowContent
-import com.makesoftware.siga.ui.users.admin.viewmodels.FetchResult
+import com.makesoftware.siga.network.FetchResult
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,7 +25,7 @@ fun <T : DataGridView> AdminDataViewScreen(
     columns: List<DataGridColumnProperties>,
     items: List<DataGridRowContent> = listOf(), // TODO: Remove this
     onItemClick: (T) -> Unit = {},
-    onAddEntity: () -> Unit,
+    onAddEntityRequest: () -> Unit,
     fetchItems: () -> Unit = {},
     isLoading: Boolean = false, // TODO: Remove this
     fetchResult: FetchResult<T> = FetchResult.Loading(), // TODO: Remove the default.
@@ -33,7 +33,7 @@ fun <T : DataGridView> AdminDataViewScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onAddEntity,
+                onClick = onAddEntityRequest,
                 containerColor = MaterialTheme.colorScheme.primary,
                 shape = CircleShape,
                 modifier = Modifier.padding(end = 16.dp, bottom = 16.dp)

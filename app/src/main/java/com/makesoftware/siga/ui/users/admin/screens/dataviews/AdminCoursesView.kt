@@ -6,7 +6,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.makesoftware.siga.data.Course
 import com.makesoftware.siga.ui.commons.components.DataGridColumnProperties
 import com.makesoftware.siga.ui.users.admin.AdminDataViewScreen
-import com.makesoftware.siga.ui.users.admin.viewmodels.FetchResult
+import com.makesoftware.siga.network.FetchResult
 
 @Composable
 fun AdminCourseScreen(
@@ -22,7 +22,7 @@ fun AdminCourseScreen(
             DataGridColumnProperties("Sigla", 1F, TextAlign.Center),
         ),
         fetchResult = fetchResult,
-        onAddEntity = onAddCourseRequest,
+        onAddEntityRequest = onAddCourseRequest,
         onItemClick = onSelectCourse,
         fetchItems = fetchCourses,
         modifier = modifier

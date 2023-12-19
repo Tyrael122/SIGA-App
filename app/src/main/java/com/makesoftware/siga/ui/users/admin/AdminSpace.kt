@@ -42,12 +42,15 @@ fun AdminSpace(onLogout: () -> Unit) {
 
     val navigationItems = createNavigationItems(navController)
 
-    AppSpace(items = navigationItems, currentRoute = currentRoute, onLogout = onLogout, topAppBarTitle = {
-        AppBarTitle(
-            items = navigationItems,
-            currentRoute = currentRoute,
-        )
-    }) {
+    AppSpace(items = navigationItems,
+        currentRoute = currentRoute,
+        onLogout = onLogout,
+        topAppBarTitle = {
+            AppBarTitle(
+                items = navigationItems,
+                currentRoute = currentRoute,
+            )
+        }) {
         AdminNavGraph(navController = navController, paddingValues = it)
     }
 }
@@ -89,18 +92,16 @@ fun AppBarTitle(items: List<NavigationItem>, currentRoute: String, modifier: Mod
         return
     }
 
-    if (currentRoute == AdminRoutes.COURSE_FORM) {
-        AppBarTitleText(
-            text = "Cadastro\n de Curso", style = alternativeTypography.bodyLarge, modifier = modifier
-        )
+    val text = when (currentRoute) {
+        AdminRoutes.COURSE_FORM -> "Cadastro\n de Curso"
+        AdminRoutes.STUDENT_FORM -> "Cadastro\n de Aluno"
+        AdminRoutes.TEACHER_FORM -> "Cadastro\n de Professor"
+        else -> ""
     }
 
-
-    if (currentRoute == AdminRoutes.STUDENT_FORM) {
-        AppBarTitleText(
-            text = "Cadastro\n de Aluno", style = alternativeTypography.bodyLarge, modifier = modifier
-        )
-    }
+    AppBarTitleText(
+        text = text, style = alternativeTypography.bodyLarge, modifier = modifier
+    )
 }
 
 @Composable

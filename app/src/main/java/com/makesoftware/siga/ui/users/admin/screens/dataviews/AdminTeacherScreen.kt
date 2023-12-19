@@ -6,7 +6,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.makesoftware.siga.data.Teacher
 import com.makesoftware.siga.ui.commons.components.DataGridColumnProperties
 import com.makesoftware.siga.ui.users.admin.AdminDataViewScreen
-import com.makesoftware.siga.ui.users.admin.viewmodels.FetchResult
+import com.makesoftware.siga.network.FetchResult
 
 
 @Composable
@@ -14,7 +14,8 @@ fun AdminTeacherScreen(
     modifier: Modifier = Modifier,
     onAddTeachers: () -> Unit,
     fetchTeachers: () -> Unit,
-    fetchResult: FetchResult<Teacher>
+    fetchResult: FetchResult<Teacher>,
+    onSelectedTeacher: (Teacher) -> Unit
 ) {
     AdminDataViewScreen(
         columns = listOf(
@@ -24,7 +25,8 @@ fun AdminTeacherScreen(
         ),
         fetchItems = fetchTeachers,
         fetchResult = fetchResult,
-        onAddEntity = onAddTeachers,
+        onAddEntityRequest = onAddTeachers,
+        onItemClick = onSelectedTeacher,
         modifier = modifier,
     )
 }

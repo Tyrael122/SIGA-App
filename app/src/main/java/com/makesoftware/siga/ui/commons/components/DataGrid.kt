@@ -51,8 +51,8 @@ import androidx.compose.ui.unit.dp
 import com.makesoftware.siga.data.DataGridView
 import com.makesoftware.siga.ui.theme.AlternativeColorScheme
 import com.makesoftware.siga.ui.theme.DataGridTypograhpy
-import com.makesoftware.siga.ui.users.admin.viewmodels.FetchResult
-import com.makesoftware.siga.ui.users.admin.viewmodels.ErrorType
+import com.makesoftware.siga.network.FetchResult
+import com.makesoftware.siga.network.ErrorType
 
 @Composable
 fun <T : DataGridView> DataGrid(

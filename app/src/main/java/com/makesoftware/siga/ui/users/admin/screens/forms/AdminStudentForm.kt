@@ -16,15 +16,12 @@ import com.makesoftware.siga.ui.commons.components.FormNumberTextField
 import com.makesoftware.siga.ui.commons.components.FormSelectableDataGrid
 import com.makesoftware.siga.ui.commons.components.FormTextField
 import com.makesoftware.siga.ui.users.admin.screens.AdminFormScreen
-import com.makesoftware.siga.ui.users.admin.viewmodels.FormState
 
 @Composable
 fun AdminStudentForm(
-    onCommitRequest: (FormState) -> Unit, onSelectSubjectsRequest: () -> Unit
+    onSelectSubjectsRequest: () -> Unit
 ) {
-    AdminFormScreen(
-        onCommitRequest = onCommitRequest,
-    ) {
+    AdminFormScreen {
         var name by rememberSaveable { mutableStateOf("") }
         FormTextField(
             value = name, onValueChange = { name = it }, placeholderText = "Nome"

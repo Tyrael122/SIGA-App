@@ -34,7 +34,7 @@ fun AdminStudentScreen(modifier: Modifier = Modifier, onAddStudent: () -> Unit) 
                 )
             ),
         ),
-        onAddEntity = onAddStudent,
+        onAddEntityRequest = onAddStudent,
         modifier = modifier
     )
 }
