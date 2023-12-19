@@ -21,6 +21,9 @@ data class Teacher(
 data class Course(
     val name: String,
     val acronym: String,
+    val description: String = "",
+    val semestersAmount: Int = 0,
+    val semestersToFinish: Int = 0,
 ) : DataGridView {
 
     override fun toDataGridView(): DataGridRowContent {

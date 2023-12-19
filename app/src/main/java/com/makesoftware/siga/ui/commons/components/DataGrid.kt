@@ -55,13 +55,13 @@ import com.makesoftware.siga.ui.users.admin.viewmodels.FetchResult
 import com.makesoftware.siga.ui.users.admin.viewmodels.ErrorType
 
 @Composable
-fun DataGrid(
+fun <T : DataGridView> DataGrid(
     modifier: Modifier = Modifier,
-    onItemClick: (Int) -> Unit = {},
+    onItemClick: (T) -> Unit = {},
     backgroundColor: Color = AlternativeColorScheme.secondary_color,
     columns: List<DataGridColumnProperties>,
     fetchData: () -> Unit,
-    fetchResult: FetchResult<DataGridView>,
+    fetchResult: FetchResult<T>,
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -120,12 +120,12 @@ private fun DataGridHeader(modifier: Modifier = Modifier, columns: List<DataGrid
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun ItemGrid(
+private fun <T : DataGridView> ItemGrid(
     modifier: Modifier = Modifier,
-    onItemClick: (Int) -> Unit,
+    onItemClick: (T) -> Unit,
     fetchData: () -> Unit,
     columns: List<DataGridColumnProperties>,
-    fetchResult: FetchResult<DataGridView>,
+    fetchResult: FetchResult<T>,
 ) {
 
     val isLoading = fetchResult is FetchResult.Loading
@@ -154,7 +154,9 @@ private fun ItemGrid(
                 LazyItemGrid(
                     items = fetchResult.items.map { it.toDataGridView() },
                     columns = columns,
-                    onItemClick = onItemClick,
+                    onItemClick = {
+                        onItemClick(fetchResult.items[it])
+                    },
                 )
             }
 

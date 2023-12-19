@@ -5,7 +5,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.makesoftware.siga.data.DataGridView
 import com.makesoftware.siga.data.Course
 import com.makesoftware.siga.data.Teacher
 import com.makesoftware.siga.data.datasources.RemoteDataSource
@@ -52,6 +51,12 @@ class AdminViewModel : ViewModel() {
         }, fetchData = {
             courseRepository.fetchCourses()
         }, context = context)
+    }
+
+    fun selectCourse(course: Course) {
+        _courseUiState.update {
+            it.copy(selectedCourse = course, formState = FormState.Readonly)
+        }
     }
 
     fun fetchTeachers(context: Context) {
@@ -109,6 +114,49 @@ class AdminViewModel : ViewModel() {
 
         return true
     }
+
+    fun updateSelectedCourse(course: Course) {
+        _courseUiState.update {
+            it.copy(selectedCourse = course)
+        }
+    }
+
+    fun commitCourseFormState(formState: FormState) {
+        when (formState) {
+            FormState.Save -> {
+                // TODO: Save the selected course
+                _courseUiState.update {
+                    it.copy(formState = FormState.Readonly)
+                }
+            }
+
+            FormState.Update -> {
+                // TODO: Update the selected course
+                _courseUiState.update {
+                    it.copy(formState = FormState.Readonly)
+                }
+            }
+
+            FormState.Readonly -> {
+                _courseUiState.update {
+                    it.copy(formState = FormState.Update)
+                }
+            }
+        }
+    }
+
+    fun clearCourseForm() {
+        updateSelectedCourse(
+            Course(
+                name = "",
+                acronym = "",
+            )
+        )
+        
+        _courseUiState.update {
+            it.copy(formState = FormState.Save)
+        }
+    }
 }
 
 private fun hasNetworkConnection(context: Context): Boolean {
@@ -135,7 +183,11 @@ data class AdminTeacherUiState(
 )
 
 data class AdminCourseUiState(
-    val selectedCourse: Course? = null,
+    val selectedCourse: Course = Course(
+        name = "",
+        acronym = "",
+    ),
+    val formState: FormState = FormState.Save,
     val fetchResult: FetchResult<Course> = FetchResult.Success(),
 )
 
@@ -146,6 +198,13 @@ sealed class FetchResult<out T> {
     data class Loading<T>(val message: String = "") : FetchResult<T>()
     data class Error<T>(val errorType: ErrorType, val message: String) : FetchResult<T>()
 }
+
+sealed class FormState {
+    object Save : FormState()
+    object Readonly : FormState()
+    object Update : FormState()
+}
+
 
 enum class ErrorType {
     NO_NETWORK, UNKNOWN

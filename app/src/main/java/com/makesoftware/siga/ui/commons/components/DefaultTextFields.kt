@@ -11,7 +11,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -54,6 +53,7 @@ fun DefaultOutlinedTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: InteractionSource = remember { MutableInteractionSource() },
     enabled: Boolean = true,
+    isReadOnly: Boolean = false,
     isError: Boolean = false,
     keyboardActions: KeyboardActions = KeyboardActions(),
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
@@ -66,6 +66,7 @@ fun DefaultOutlinedTextField(
         textStyle = textStyle,
         singleLine = singleLine,
         minLines = minLines,
+        readOnly = isReadOnly,
         keyboardActions = keyboardActions,
         keyboardOptions = keyboardOptions,
         modifier = modifier
@@ -104,6 +105,7 @@ fun DefaultNumberOutlinedTextField(
     modifier: Modifier = Modifier,
     value: Int?,
     onValueChange: (Int?) -> Unit,
+    isReadOnly: Boolean = false,
     maxCharCount: Int = Int.MAX_VALUE
 ) {
     DefaultOutlinedTextField(
@@ -127,6 +129,7 @@ fun DefaultNumberOutlinedTextField(
             focusedBorderColor = MaterialTheme.colorScheme.onSurface,
             unfocusedBorderColor = MaterialTheme.colorScheme.onSurface,
         ),
+        isReadOnly = isReadOnly,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         contentPadding = PaddingValues(horizontal = 5.dp),
     )

@@ -2,51 +2,56 @@ package com.makesoftware.siga.ui.users.admin.screens.forms
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.makesoftware.siga.data.Course
 import com.makesoftware.siga.ui.commons.components.FormNumberTextField
 import com.makesoftware.siga.ui.commons.components.FormSelectableDataGrid
 import com.makesoftware.siga.ui.commons.components.FormTextField
 import com.makesoftware.siga.ui.users.admin.screens.AdminFormScreen
+import com.makesoftware.siga.ui.users.admin.viewmodels.FormState
 
 @Composable
 fun AdminCourseForm(
-    commitButtonText: String, onCommitRequest: () -> Unit, onSelectSubjectsRequest: () -> Unit
+    course: Course,
+    onCommitRequest: (FormState) -> Unit,
+    onSelectSubjectsRequest: () -> Unit,
+    updateCourse: (Course) -> Unit,
+    formState: FormState,
 ) {
     AdminFormScreen(
-        commitButtonText = commitButtonText,
         onCommitRequest = onCommitRequest,
+        formState = formState,
     ) {
-        var name by rememberSaveable { mutableStateOf("") }
         FormTextField(
-            value = name, onValueChange = { name = it }, placeholderText = "Nome"
+            value = course.name,
+            onValueChange = { updateCourse(course.copy(name = it)) },
+            placeholderText = "Nome"
         )
 
-        var descricao by rememberSaveable { mutableStateOf("") }
         FormTextField(
-            value = descricao,
-            onValueChange = { descricao = it },
+            value = course.acronym,
+            onValueChange = { updateCourse(course.copy(acronym = it)) },
+            placeholderText = "Sigla",
+        )
+
+        FormTextField(
+            value = course.description,
+            onValueChange = { updateCourse(course.copy(description = it)) },
             placeholderText = "Descrição",
-            minLines = 3
+            minLines = 3,
         )
 
-        var quantidadeDeSemestres by rememberSaveable { mutableIntStateOf(0) }
         FormNumberTextField(
-            value = quantidadeDeSemestres,
-            onValueChange = { quantidadeDeSemestres = it ?: 0 },
-            fieldDescription = "Quantidade de semestres",
+            value = course.semestersAmount, onValueChange = {
+                updateCourse(course.copy(semestersAmount = it ?: 0))
+            }, fieldDescription = "Quantidade de semestres"
         )
 
-        var semestresParaFinalizacao by rememberSaveable { mutableIntStateOf(0) }
         FormNumberTextField(
-            value = semestresParaFinalizacao,
-            onValueChange = { semestresParaFinalizacao = it ?: 0 },
-            fieldDescription = "Semestres para finalização",
+            value = course.semestersToFinish, onValueChange = {
+                updateCourse(course.copy(semestersToFinish = it ?: 0))
+            }, fieldDescription = "Semestres para finalização"
         )
 
         FormSelectableDataGrid(

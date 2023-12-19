@@ -20,15 +20,15 @@ import com.makesoftware.siga.ui.users.admin.viewmodels.FetchResult
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminDataViewScreen(
+fun <T : DataGridView> AdminDataViewScreen(
     modifier: Modifier = Modifier,
     columns: List<DataGridColumnProperties>,
     items: List<DataGridRowContent> = listOf(), // TODO: Remove this
-    onItemClick: (Int) -> Unit = {},
+    onItemClick: (T) -> Unit = {},
     onAddEntity: () -> Unit,
     fetchItems: () -> Unit = {},
     isLoading: Boolean = false, // TODO: Remove this
-    fetchResult: FetchResult<DataGridView> = FetchResult.Loading(), // TODO: Remove the default.
+    fetchResult: FetchResult<T> = FetchResult.Loading(), // TODO: Remove the default.
 ) {
     Scaffold(
         floatingActionButton = {
@@ -47,7 +47,7 @@ fun AdminDataViewScreen(
                 .padding(it)
                 .padding(horizontal = 15.dp)
                 .padding(top = 30.dp, bottom = 15.dp),
-            onItemClick = { /* TODO */ },
+            onItemClick = onItemClick,
             fetchResult = fetchResult,
             columns = columns,
             fetchData = fetchItems,

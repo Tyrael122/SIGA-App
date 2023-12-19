@@ -51,23 +51,46 @@ fun AdminNavGraph(
     ) {
         adminDataview(viewModel, navController)
 
-        composable(AdminRoutes.COURSE_FORM) {
-            AdminCourseForm(onSelectSubjectsRequest = {
-                // TODO: Navigate to the subjects screen, with the selectable option
-            }, onCommitRequest = {
-                // TODO: Actually save the course
-                // TODO: Show a toast message saying that the course was saved
-            }, commitButtonText = "Salvar"
-            )
-        }
+        courseScreens(viewModel, navController)
 
         // TODO: Create the student form functions.
         composable(AdminRoutes.STUDENT_FORM) {
-            AdminStudentForm(onSelectSubjectsRequest = {},
-                onCommitRequest = {},
-                commitButtonText = "Salvar"
-            )
+            AdminStudentForm(onCommitRequest = {}) {}
         }
+    }
+}
+
+fun NavGraphBuilder.courseScreens(
+    viewModel: AdminViewModel, navController: NavHostController
+) {
+    composable(AdminRoutes.COURSES) {
+        val courseUiState by viewModel.courseUiState.collectAsState()
+        val context = LocalContext.current
+
+        AdminCourseScreen(onAddCourseRequest = {
+            viewModel.clearCourseForm()
+            navController.navigate(AdminRoutes.COURSE_FORM)
+        }, fetchResult = courseUiState.fetchResult, fetchCourses = {
+            viewModel.fetchCourses(context)
+        }, onSelectCourse = {
+            viewModel.selectCourse(it)
+            navController.navigate(AdminRoutes.COURSE_FORM)
+        })
+    }
+
+    // TODO: Pass the currently selected course and lock the screen for view only, until user presses the edit button.
+    composable(AdminRoutes.COURSE_FORM) {
+        val courseUiState by viewModel.courseUiState.collectAsState()
+
+        AdminCourseForm(course = courseUiState.selectedCourse, updateCourse = {
+            viewModel.updateSelectedCourse(it)
+        }, onSelectSubjectsRequest = {
+            // TODO: Navigate to the subjects screen, with the selectable option
+        }, onCommitRequest = { incomingFormState ->
+            viewModel.commitCourseFormState(incomingFormState)
+            // TODO: Show a toast message saying that the course was saved
+        }, formState = courseUiState.formState
+        )
     }
 }
 
@@ -76,17 +99,6 @@ fun NavGraphBuilder.adminDataview(
 ) {
     composable(AdminRoutes.HOME) {
         AdminHomeScreen()
-    }
-
-    composable(AdminRoutes.COURSES) {
-        val courseUiState by viewModel.courseUiState.collectAsState()
-        val context = LocalContext.current
-
-        AdminCourseScreen(onAddCourse = {
-            navController.navigate(AdminRoutes.COURSE_FORM)
-        }, fetchResult = courseUiState.fetchResult, fetchCourses = {
-            viewModel.fetchCourses(context)
-        })
     }
 
     composable(AdminRoutes.SUBJECTS) {

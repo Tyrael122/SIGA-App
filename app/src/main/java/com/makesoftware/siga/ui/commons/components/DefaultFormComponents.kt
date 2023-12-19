@@ -41,7 +41,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.makesoftware.siga.ui.theme.AlternativeColorScheme
 import com.makesoftware.siga.ui.theme.alternativeTypography
+import com.makesoftware.siga.ui.users.admin.screens.LocalIsReadOnly
 
+
+@Composable
+fun FormTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    isReadOnly: Boolean? = null,
+    minLines: Int = 1,
+    placeholderText: String
+) {
+    DefaultOutlinedTextField(
+        modifier = Modifier.fillMaxWidth(),
+        value = value,
+        placeholderText = placeholderText,
+        onValueChange = onValueChange,
+        singleLine = false,
+        isReadOnly = isReadOnly ?: LocalIsReadOnly.current,
+        minLines = minLines,
+    )
+}
 
 @Composable
 fun FormNumberTextField(
@@ -50,6 +70,7 @@ fun FormNumberTextField(
     onValueChange: (Int?) -> Unit,
     fieldDescription: String,
     maxCharCount: Int = 2,
+    isReadOnly: Boolean? = null,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -75,23 +96,10 @@ fun FormNumberTextField(
             value = value,
             onValueChange = onValueChange,
             maxCharCount = maxCharCount,
+            isReadOnly = isReadOnly ?: LocalIsReadOnly.current,
             modifier = Modifier.width(40.dp),
         )
     }
-}
-
-@Composable
-fun FormTextField(
-    value: String, onValueChange: (String) -> Unit, minLines: Int = 1, placeholderText: String
-) {
-    DefaultOutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = value,
-        placeholderText = placeholderText,
-        onValueChange = onValueChange,
-        singleLine = false,
-        minLines = minLines,
-    )
 }
 
 @Composable

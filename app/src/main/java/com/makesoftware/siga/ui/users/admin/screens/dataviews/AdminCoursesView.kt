@@ -11,7 +11,8 @@ import com.makesoftware.siga.ui.users.admin.viewmodels.FetchResult
 @Composable
 fun AdminCourseScreen(
     modifier: Modifier = Modifier,
-    onAddCourse: () -> Unit,
+    onAddCourseRequest: () -> Unit,
+    onSelectCourse: (Course) -> Unit,
     fetchCourses: () -> Unit,
     fetchResult: FetchResult<Course>
 ) {
@@ -21,7 +22,8 @@ fun AdminCourseScreen(
             DataGridColumnProperties("Sigla", 1F, TextAlign.Center),
         ),
         fetchResult = fetchResult,
-        onAddEntity = onAddCourse,
+        onAddEntity = onAddCourseRequest,
+        onItemClick = onSelectCourse,
         fetchItems = fetchCourses,
         modifier = modifier
     )
