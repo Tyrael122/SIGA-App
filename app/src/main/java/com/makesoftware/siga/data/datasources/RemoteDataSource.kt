@@ -1,5 +1,6 @@
 package com.makesoftware.siga.data.datasources
 
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.makesoftware.siga.data.Course
 import com.makesoftware.siga.data.Student
 import com.makesoftware.siga.data.Teacher
@@ -7,26 +8,52 @@ import com.makesoftware.siga.network.SIGAApi
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
+import retrofit2.Retrofit
+
+private const val BASE_URL = "http://192.168.0.93:8080/"
+
+
+private val json = Json {
+    ignoreUnknownKeys = true
+    coerceInputValues = true
+}
+
+private val retrofit = Retrofit.Builder()
+    .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+    .baseUrl(BASE_URL).build()
+
 
 class RemoteDataSource(
-    private val api: SIGAApi, private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
+
+    private val retrofitService: SIGAApi by lazy {
+        retrofit.create(SIGAApi::class.java)
+    }
 
     suspend fun fetchCourses(): List<Course> {
         return withContext(ioDispatcher) {
-            api.fetchCourses()
+            retrofitService.fetchCourses()
         }
     }
 
     suspend fun fetchTeachers(): List<Teacher> {
         return withContext(ioDispatcher) {
-            api.fetchTeachers()
+            retrofitService.fetchTeachers()
         }
     }
 
     suspend fun fetchStudent(): List<Student> {
         return withContext(ioDispatcher) {
-            api.fetchStudent()
+            retrofitService.fetchStudent()
+        }
+    }
+
+    suspend fun postTeacher(teacher: Teacher) {
+        withContext(ioDispatcher) {
+            retrofitService.postTeacher(teacher)
         }
     }
 }

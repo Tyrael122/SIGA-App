@@ -126,7 +126,7 @@ fun NavGraphBuilder.teacherScreens(
             viewModel.saveTeacherUpdate()
         }, saveTeacher = {
             viewModel.saveTeacher()
-        }, isUpdate = teacherUiState.selectedTeacher.isUpdate)
+        }, isUpdate = false)
     }
 }
 

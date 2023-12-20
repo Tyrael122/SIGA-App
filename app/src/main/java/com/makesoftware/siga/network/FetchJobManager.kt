@@ -3,6 +3,7 @@ package com.makesoftware.siga.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
@@ -37,6 +38,8 @@ class FetchJobManager {
                     )
 
                 } catch (ioe: IOException) {
+                    Log.d("FetchJobManager", "IOException: ${ioe.message}")
+                    Log.d("FetchJobManager", "IOException cause: ${ioe.cause?.message}")
                     updateFetchResult(
                         FetchResult.Error(
                             ErrorType.UNKNOWN, "Oops. Algo deu errado. Tente novamente."

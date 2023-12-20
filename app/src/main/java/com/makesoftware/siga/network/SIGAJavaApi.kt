@@ -21,9 +21,9 @@ class SIGAJavaApi : SIGAApi {
         delay(5000)
 
         return listOf(
-            Teacher("Humberto", degree = "Faixa preta", age = 25),
-            Teacher("Rodrigo Amorim", degree = "Doutor", age = 45),
-            Teacher("Viotti", degree = "Mestre", age = 35),
+//            Teacher("Humberto", degree = "Faixa preta", age = 25),
+//            Teacher("Rodrigo Amorim", degree = "Doutor", age = 45),
+//            Teacher("Viotti", degree = "Mestre", age = 35),
         )
     }
 
@@ -59,5 +59,9 @@ class SIGAJavaApi : SIGAApi {
             Student("Joaquina"),
             Student("Joaquino"),
         )
+    }
+
+    override suspend fun postTeacher(teacher: Teacher) {
+
     }
 }

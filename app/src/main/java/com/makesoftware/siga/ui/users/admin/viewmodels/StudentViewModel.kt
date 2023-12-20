@@ -17,9 +17,7 @@ import kotlinx.coroutines.launch
 
 class StudentViewModel : ViewModel() {
 
-    private val remoteDataSource = RemoteDataSource(
-        api = SIGAJavaApi()
-    )
+    private val remoteDataSource = RemoteDataSource()
 
     private val courseRepository: StudentsRepository = StudentsRepository(
         remoteDataSource

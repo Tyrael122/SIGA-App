@@ -10,4 +10,8 @@ class TeachersRepository(
     suspend fun fetchTeachers(): List<Teacher> {
         return remoteDataSource.fetchTeachers()
     }
+
+    suspend fun saveTeacher(teacher: Teacher) {
+        remoteDataSource.postTeacher(teacher)
+    }
 }
