@@ -11,56 +11,51 @@ import com.makesoftware.siga.ui.users.admin.screens.AdminFormScreen
 
 @Composable
 fun AdminTeacherForm(
-    teacher: Teacher?,
+    teacher: Teacher,
     updateTeacherData: (Teacher) -> Unit,
     saveTeacherUpdate: () -> Unit,
-    saveTeacher: (Teacher) -> Unit,
+    saveTeacher: () -> Unit,
     isUpdate: Boolean
 ) {
-    val internalTeacher by remember {
-        mutableStateOf(
-            teacher ?: Teacher(
-                isUpdate = isUpdate, User()
-            )
-        )
-    }
 
     AdminFormScreen(
-        saveEntity = { saveTeacher(internalTeacher) },
+        saveEntity = saveTeacher,
         updateEntity = saveTeacherUpdate,
         isUpdate = isUpdate,
     ) {
-        val user = internalTeacher.user
-        val updateUser = {
-            updateTeacherData(internalTeacher.copy(user = user))
+        val user = teacher.user
+        val updateUser = { incomingUser: User ->
+            updateTeacherData(teacher.copy(user = incomingUser))
         }
 
         FormTextField(
             value = user.firstName, onValueChange = {
-                user.firstName = it
-                updateUser()
+                updateUser(user.copy(firstName = it))
             }, placeholderText = "Nome"
         )
 
         FormTextField(
             value = user.cpf, onValueChange = {
-                user.cpf = it
-                updateUser()
+                updateUser(user.copy(cpf = it))
             }, placeholderText = "CPF"
         )
 
         FormTextField(
             value = user.email, onValueChange = {
-                user.email = it
-                updateUser()
+                updateUser(user.copy(email = it))
             }, placeholderText = "Email"
         )
 
         FormTextField(
             value = user.password, onValueChange = {
-                user.password = it
-                updateUser()
+                updateUser(user.copy(password = it))
             }, placeholderText = "Senha"
+        )
+
+        FormTextField(
+            value = teacher.urlCurriculoLattes, onValueChange = {
+                updateTeacherData(teacher.copy(urlCurriculoLattes = it))
+            }, placeholderText = "URL do Currículo Lattes", minLines = 2
         )
     }
 }

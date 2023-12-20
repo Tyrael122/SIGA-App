@@ -12,6 +12,8 @@ class TeachersRepository(
     }
 
     suspend fun saveTeacher(teacher: Teacher) {
-        remoteDataSource.postTeacher(teacher)
+        val postedUser = remoteDataSource.postUser(teacher.user)
+
+        remoteDataSource.postTeacher(postedUser.id, teacher)
     }
 }

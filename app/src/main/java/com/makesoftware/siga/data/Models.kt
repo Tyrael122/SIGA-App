@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Teacher(
-    val isUpdate: Boolean = false,
-    val user: User,
+    val user: User = User(),
+    val urlCurriculoLattes: String = "",
 ) : DataGridView {
     override fun toDataGridView(): DataGridRowContent {
         return DataGridRowContent(
@@ -20,12 +20,13 @@ data class Teacher(
 }
 
 @Serializable
-open class User(
-    var firstName: String = "",
-    var lastName: String = "",
-    var cpf: String = "",
-    var email: String = "",
-    var password: String = "",
+data class User(
+    val id: Long = 0,
+    val firstName: String = "",
+    val lastName: String = "",
+    val cpf: String = "",
+    val email: String = "",
+    val password: String = "",
 )
 
 data class Course(

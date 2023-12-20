@@ -107,7 +107,8 @@ fun NavGraphBuilder.teacherScreens(
         val teacherUiState by viewModel.teacherUiState.collectAsState()
         val context = LocalContext.current
 
-        AdminTeacherScreen(onAddTeachers = {
+        AdminTeacherScreen(onAddTeachersRequest = {
+            viewModel.clearSelectedTeacher()
             navController.navigate(AdminRoutes.TEACHER_FORM)
         }, fetchResult = teacherUiState.fetchResult, fetchTeachers = {
             viewModel.fetchTeachers(context)
@@ -119,14 +120,15 @@ fun NavGraphBuilder.teacherScreens(
 
     composable(AdminRoutes.TEACHER_FORM) {
         val teacherUiState by viewModel.teacherUiState.collectAsState()
+        val context = LocalContext.current
 
         AdminTeacherForm(teacher = teacherUiState.selectedTeacher, updateTeacherData = {
             viewModel.updateSelectedTeacher(it)
         }, saveTeacherUpdate = {
-            viewModel.saveTeacherUpdate()
+            viewModel.updateTeacher()
         }, saveTeacher = {
-            viewModel.saveTeacher()
-        }, isUpdate = false)
+            viewModel.saveTeacher(context)
+        }, isUpdate = teacherUiState.isTeacherBeingUpdated)
     }
 }
 

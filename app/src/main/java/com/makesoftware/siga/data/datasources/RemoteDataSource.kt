@@ -4,6 +4,7 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.makesoftware.siga.data.Course
 import com.makesoftware.siga.data.Student
 import com.makesoftware.siga.data.Teacher
+import com.makesoftware.siga.data.User
 import com.makesoftware.siga.network.SIGAApi
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -51,9 +52,15 @@ class RemoteDataSource(
         }
     }
 
-    suspend fun postTeacher(teacher: Teacher) {
+    suspend fun postTeacher(userId: Long, teacher: Teacher) {
         withContext(ioDispatcher) {
-            retrofitService.postTeacher(teacher)
+            retrofitService.postTeacher(userId, teacher)
+        }
+    }
+
+    suspend fun postUser(user: User): User {
+        return withContext(ioDispatcher) {
+            retrofitService.postUser(user)
         }
     }
 }

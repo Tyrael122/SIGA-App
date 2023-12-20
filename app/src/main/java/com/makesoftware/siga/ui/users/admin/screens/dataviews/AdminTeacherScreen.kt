@@ -12,7 +12,7 @@ import com.makesoftware.siga.network.FetchResult
 @Composable
 fun AdminTeacherScreen(
     modifier: Modifier = Modifier,
-    onAddTeachers: () -> Unit,
+    onAddTeachersRequest: () -> Unit,
     fetchTeachers: () -> Unit,
     fetchResult: FetchResult<Teacher>,
     onSelectedTeacher: (Teacher) -> Unit
@@ -25,7 +25,7 @@ fun AdminTeacherScreen(
         ),
         fetchItems = fetchTeachers,
         fetchResult = fetchResult,
-        onAddEntityRequest = onAddTeachers,
+        onAddEntityRequest = onAddTeachersRequest,
         onItemClick = onSelectedTeacher,
         modifier = modifier,
     )

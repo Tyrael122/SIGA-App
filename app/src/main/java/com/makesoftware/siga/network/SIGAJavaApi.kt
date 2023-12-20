@@ -3,6 +3,7 @@ package com.makesoftware.siga.network
 import com.makesoftware.siga.data.Course
 import com.makesoftware.siga.data.Student
 import com.makesoftware.siga.data.Teacher
+import com.makesoftware.siga.data.User
 import kotlinx.coroutines.delay
 
 class SIGAJavaApi : SIGAApi {
@@ -61,7 +62,11 @@ class SIGAJavaApi : SIGAApi {
         )
     }
 
-    override suspend fun postTeacher(teacher: Teacher) {
+    override suspend fun postTeacher(userId: Long, teacher: Teacher) {
+        TODO("Not yet implemented")
+    }
 
+    override suspend fun postUser(user: User): User {
+        TODO("Not yet implemented")
     }
 }

@@ -1,6 +1,8 @@
 package com.makesoftware.siga.ui.users.admin.viewmodels
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.makesoftware.siga.data.Teacher
@@ -31,7 +33,7 @@ class TeacherViewModel : ViewModel() {
 
     fun selectTeacher(teacher: Teacher) {
         _teacherUiState.update {
-            it.copy(selectedTeacher = teacher.copy(isUpdate = true))
+            it.copy(selectedTeacher = teacher, isTeacherBeingUpdated = true)
         }
     }
 
@@ -47,7 +49,7 @@ class TeacherViewModel : ViewModel() {
         }
     }
 
-    fun updateSelectedTeacher(teacher: Teacher?) {
+    fun updateSelectedTeacher(teacher: Teacher) {
         _teacherUiState.update {
             it.copy(selectedTeacher = teacher)
         }
@@ -55,24 +57,32 @@ class TeacherViewModel : ViewModel() {
 
     fun clearSelectedTeacher() {
         updateSelectedTeacher(
-            null
+            Teacher()
         )
     }
 
-    fun saveTeacherUpdate() {
+    fun updateTeacher() {
         // TODO: Implement this.
     }
 
-    fun saveTeacher() {
+    fun saveTeacher(context: Context) {
         viewModelScope.launch {
-//            teacherRepository.saveTeacher(teacherUiState.value.selectedTeacher)
-        }
+            try {
+                teacherRepository.saveTeacher(_teacherUiState.value.selectedTeacher)
+            } catch (e: Exception) {
+                Log.d("TeacherViewModel", "Error: ${e.message}")
+                Toast.makeText(context, "Erro ao salvar professor.", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
 
-        clearSelectedTeacher()
+            Toast.makeText(context, "Professor salvo com sucesso.", Toast.LENGTH_SHORT).show()
+            clearSelectedTeacher()
+        }
     }
 }
 
 data class AdminTeacherUiState(
-    val selectedTeacher: Teacher? = null,
+    val selectedTeacher: Teacher = Teacher(),
+    val isTeacherBeingUpdated: Boolean = false,
     val fetchResult: FetchResult<Teacher> = FetchResult.Success(),
 )
