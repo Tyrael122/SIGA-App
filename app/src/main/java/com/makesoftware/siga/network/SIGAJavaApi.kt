@@ -1,6 +1,7 @@
 package com.makesoftware.siga.network
 
 import com.makesoftware.siga.data.Course
+import com.makesoftware.siga.data.Student
 import com.makesoftware.siga.data.Teacher
 import kotlinx.coroutines.delay
 
@@ -23,6 +24,40 @@ class SIGAJavaApi : SIGAApi {
             Teacher("Humberto", degree = "Faixa preta", age = 25),
             Teacher("Rodrigo Amorim", degree = "Doutor", age = 45),
             Teacher("Viotti", degree = "Mestre", age = 35),
+        )
+    }
+
+    override suspend fun fetchStudent(): List<Student> {
+        delay(5000)
+
+        return listOf(
+            Student("João"),
+            Student("Maria"),
+            Student("José"),
+            Student("Pedro"),
+            Student("Ana"),
+            Student("Paulo"),
+            Student("Lucas"),
+            Student("Luciana"),
+            Student("Mariana"),
+            Student("Joaquim"),
+            Student("Joaquina"),
+            Student("Joaquino"),
+            Student("Joaquim"),
+            Student("Joaquina"),
+            Student("Joaquino"),
+            Student("Joaquim"),
+            Student("Joaquina"),
+            Student("Joaquino"),
+            Student("Joaquim"),
+            Student("Joaquina"),
+            Student("Joaquino"),
+            Student("Joaquim"),
+            Student("Joaquina"),
+            Student("Joaquino"),
+            Student("Joaquim"),
+            Student("Joaquina"),
+            Student("Joaquino"),
         )
     }
 }

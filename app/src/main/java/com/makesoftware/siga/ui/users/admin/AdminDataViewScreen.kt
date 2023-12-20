@@ -23,12 +23,10 @@ import com.makesoftware.siga.network.FetchResult
 fun <T : DataGridView> AdminDataViewScreen(
     modifier: Modifier = Modifier,
     columns: List<DataGridColumnProperties>,
-    items: List<DataGridRowContent> = listOf(), // TODO: Remove this
     onItemClick: (T) -> Unit = {},
     onAddEntityRequest: () -> Unit,
-    fetchItems: () -> Unit = {},
-    isLoading: Boolean = false, // TODO: Remove this
-    fetchResult: FetchResult<T> = FetchResult.Loading(), // TODO: Remove the default.
+    fetchItems: () -> Unit,
+    fetchResult: FetchResult<T>
 ) {
     Scaffold(
         floatingActionButton = {

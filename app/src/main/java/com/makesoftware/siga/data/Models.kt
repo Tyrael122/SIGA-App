@@ -1,5 +1,7 @@
 package com.makesoftware.siga.data
 
+import androidx.compose.ui.text.style.TextAlign
+import com.makesoftware.siga.ui.commons.components.DataGridColumnProperties
 import com.makesoftware.siga.ui.commons.components.DataGridRowContent
 
 data class Teacher(
@@ -28,12 +30,33 @@ data class Course(
     val isUpdate: Boolean = false,
 ) : DataGridView {
 
-
     override fun toDataGridView(): DataGridRowContent {
         return DataGridRowContent(
             listOf(
                 this.name, this.acronym
             )
+        )
+    }
+}
+
+data class Student(
+    val name: String = "",
+    val isUpdate: Boolean = false,
+) : DataGridView {
+
+    override fun toDataGridView(): DataGridRowContent {
+        return DataGridRowContent(
+            listOf(
+                this.name
+            )
+        )
+    }
+
+    companion object {
+        val columns: List<DataGridColumnProperties> = listOf(
+            DataGridColumnProperties("Nome", 2F, TextAlign.Start),
+            DataGridColumnProperties("Curso", 1F, TextAlign.Left),
+            DataGridColumnProperties("Semestre", 1F, TextAlign.Center)
         )
     }
 }

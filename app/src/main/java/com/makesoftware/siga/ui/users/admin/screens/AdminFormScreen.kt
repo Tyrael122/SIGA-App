@@ -23,9 +23,9 @@ fun AdminFormScreen(
     saveButtonText: String = "Salvar",
     readonlyButtonText: String = "Editar",
     updateButtonText: String = "Salvar edições",
-    saveEntity: () -> Unit = {},
-    updateEntity: () -> Unit = {},
-    isUpdate: Boolean = false,
+    saveEntity: () -> Unit,
+    updateEntity: () -> Unit,
+    isUpdate: Boolean,
     content: @Composable () -> Unit
 ) {
     Column(

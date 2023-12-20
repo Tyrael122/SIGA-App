@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -100,7 +101,9 @@ fun AppBarTitle(items: List<NavigationItem>, currentRoute: String, modifier: Mod
     }
 
     AppBarTitleText(
-        text = text, style = alternativeTypography.bodyLarge, modifier = modifier
+        text = text,
+        style = alternativeTypography.bodyLarge.copy(textAlign = TextAlign.Center),
+        modifier = modifier
     )
 }
 

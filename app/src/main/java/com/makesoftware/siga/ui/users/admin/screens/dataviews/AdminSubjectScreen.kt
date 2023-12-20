@@ -11,30 +11,30 @@ import com.makesoftware.siga.ui.users.admin.AdminDataViewScreen
 
 @Composable
 fun AdminSubjectScreen(modifier: Modifier = Modifier) {
-    AdminDataViewScreen<Course>(
-        columns = listOf(
-            DataGridColumnProperties("Nome", 2F, TextAlign.Start),
-            DataGridColumnProperties("Sigla", 1F, TextAlign.Center),
-            DataGridColumnProperties("Semestre", 1F, TextAlign.Center)
-        ),
-        items = listOf(
-            DataGridRowContent(
-                listOf(
-                    "Laboratório de Engenharia de Software", "ADS", "1"
-                )
-            ),
-            DataGridRowContent(
-                listOf(
-                    "Economia", "ADS", "2"
-                )
-            ),
-            DataGridRowContent(
-                listOf(
-                    "Sistemas Operacionais", "ADS", "3"
-                )
-            ),
-        ),
-        onAddEntityRequest = { /* TODO */ },
-        modifier = modifier,
-    )
+//    AdminDataViewScreen<Course>(
+//        columns = listOf(
+//            DataGridColumnProperties("Nome", 2F, TextAlign.Start),
+//            DataGridColumnProperties("Sigla", 1F, TextAlign.Center),
+//            DataGridColumnProperties("Semestre", 1F, TextAlign.Center)
+//        ),
+//        items = listOf(
+//            DataGridRowContent(
+//                listOf(
+//                    "Laboratório de Engenharia de Software", "ADS", "1"
+//                )
+//            ),
+//            DataGridRowContent(
+//                listOf(
+//                    "Economia", "ADS", "2"
+//                )
+//            ),
+//            DataGridRowContent(
+//                listOf(
+//                    "Sistemas Operacionais", "ADS", "3"
+//                )
+//            ),
+//        ),
+//        onAddEntityRequest = { /* TODO */ },
+//        modifier = modifier,
+//    )
 }

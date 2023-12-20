@@ -1,6 +1,7 @@
 package com.makesoftware.siga.data.datasources
 
 import com.makesoftware.siga.data.Course
+import com.makesoftware.siga.data.Student
 import com.makesoftware.siga.data.Teacher
 import com.makesoftware.siga.network.SIGAApi
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,6 +21,12 @@ class RemoteDataSource(
     suspend fun fetchTeachers(): List<Teacher> {
         return withContext(ioDispatcher) {
             api.fetchTeachers()
+        }
+    }
+
+    suspend fun fetchStudent(): List<Student> {
+        return withContext(ioDispatcher) {
+            api.fetchStudent()
         }
     }
 }
