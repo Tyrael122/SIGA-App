@@ -3,6 +3,7 @@ package com.makesoftware.siga.data.datasources
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.makesoftware.siga.data.Course
 import com.makesoftware.siga.data.Student
+import com.makesoftware.siga.data.Subject
 import com.makesoftware.siga.data.Teacher
 import com.makesoftware.siga.data.User
 import com.makesoftware.siga.network.SIGAApi
@@ -52,6 +53,12 @@ class RemoteDataSource(
         }
     }
 
+    suspend fun fetchSubjects(): List<Subject> {
+        return withContext(ioDispatcher) {
+            retrofitService.fetchSubjects()
+        }
+    }
+
     suspend fun postTeacher(userId: Long, teacher: Teacher) {
         withContext(ioDispatcher) {
             retrofitService.postTeacher(userId, teacher)
@@ -61,6 +68,18 @@ class RemoteDataSource(
     suspend fun postUser(user: User): User {
         return withContext(ioDispatcher) {
             retrofitService.postUser(user)
+        }
+    }
+
+    suspend fun postStudent(userId: Long, student: Student) {
+        withContext(ioDispatcher) {
+            retrofitService.postStudent(userId, student)
+        }
+    }
+
+    suspend fun postSubject(subject: Subject) {
+        withContext(ioDispatcher) {
+            retrofitService.postSubject(subject)
         }
     }
 }

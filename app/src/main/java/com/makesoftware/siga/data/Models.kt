@@ -17,39 +17,43 @@ data class Teacher(
             )
         )
     }
+
+    companion object {
+        val columns: List<DataGridColumnProperties> = listOf(
+            DataGridColumnProperties("Nome", 2F, TextAlign.Start),
+            DataGridColumnProperties("Nível", 1.5F, TextAlign.Center),
+            DataGridColumnProperties("Idade", 0.7F, TextAlign.Center),
+        )
+    }
 }
 
 @Serializable
-data class User(
-    val id: Long = 0,
-    val firstName: String = "",
-    val lastName: String = "",
-    val cpf: String = "",
-    val email: String = "",
-    val password: String = "",
-)
-
 data class Course(
-    val name: String,
-    val acronym: String,
+    val name: String = "",
     val description: String = "",
     val semestersAmount: Int = 0,
     val semestersToFinish: Int = 0,
-    val isUpdate: Boolean = false,
 ) : DataGridView {
 
     override fun toDataGridView(): DataGridRowContent {
         return DataGridRowContent(
             listOf(
-                this.name, this.acronym
+                this.name, this.description
             )
+        )
+    }
+
+    companion object {
+        val columns: List<DataGridColumnProperties> = listOf(
+            DataGridColumnProperties("Nome", 2F, TextAlign.Start),
+            DataGridColumnProperties("Descrição", 1F, TextAlign.Center),
         )
     }
 }
 
+@Serializable
 data class Student(
     val name: String = "",
-    val isUpdate: Boolean = false,
 ) : DataGridView {
 
     override fun toDataGridView(): DataGridRowContent {
@@ -68,6 +72,42 @@ data class Student(
         )
     }
 }
+
+@Serializable
+data class Subject(
+    val name: String = "",
+    val description: String = "",
+    val workload: Int = 0,
+    val defaultSemester: Int = 0,
+) : DataGridView {
+
+
+    override fun toDataGridView(): DataGridRowContent {
+        return DataGridRowContent(
+            listOf(
+                this.name, this.workload.toString(), this.defaultSemester.toString()
+            )
+        )
+    }
+
+    companion object {
+        val columns: List<DataGridColumnProperties> = listOf(
+            DataGridColumnProperties("Nome", 2F, TextAlign.Start),
+            DataGridColumnProperties("Carga hor.", 1F, TextAlign.Center),
+            DataGridColumnProperties("Semestre", 1F, TextAlign.Center),
+        )
+    }
+}
+
+@Serializable
+data class User(
+    val id: Long = 0,
+    val firstName: String = "",
+    val lastName: String = "",
+    val cpf: String = "",
+    val email: String = "",
+    val password: String = "",
+)
 
 interface DataGridView {
     fun toDataGridView(): DataGridRowContent

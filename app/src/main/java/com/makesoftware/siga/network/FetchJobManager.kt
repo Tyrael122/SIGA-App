@@ -8,7 +8,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import java.io.IOException
 
 class FetchJobManager {
 
@@ -37,9 +36,9 @@ class FetchJobManager {
                         )
                     )
 
-                } catch (ioe: IOException) {
-                    Log.d("FetchJobManager", "IOException: ${ioe.message}")
-                    Log.d("FetchJobManager", "IOException cause: ${ioe.cause?.message}")
+                } catch (ex: Exception) {
+                    Log.d("FetchJobManager", "Exception: ${ex.message}")
+                    Log.d("FetchJobManager", "Exception cause: ${ex.cause?.message}")
                     updateFetchResult(
                         FetchResult.Error(
                             ErrorType.UNKNOWN, "Oops. Algo deu errado. Tente novamente."

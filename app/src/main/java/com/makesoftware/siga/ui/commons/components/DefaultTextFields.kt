@@ -26,13 +26,6 @@ import androidx.compose.ui.unit.dp
 import com.makesoftware.siga.ui.theme.AlternativeColorScheme
 
 
-// TODO: Refactor this to provide a decent set of TextField components with decent APIs
-//  OutlinedTextField, DONE!
-//  FilledTextField, (reuse OutlinedTextField but pass 0 border width), to be used in DataGridSearch.
-//  The idea is to define a data class to hold all parameters for the textField components.
-//  NumberOutlinedTextField. DONE!
-
-//  They are all gonna use the same OutlinedTextField component, but with different parameters.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DefaultOutlinedTextField(
@@ -103,24 +96,26 @@ fun DefaultOutlinedTextField(
 @Composable
 fun DefaultNumberOutlinedTextField(
     modifier: Modifier = Modifier,
-    value: Int?,
-    onValueChange: (Int?) -> Unit,
+    value: Int,
+    onValueChange: (Int) -> Unit,
     isReadOnly: Boolean = false,
     maxCharCount: Int = Int.MAX_VALUE
 ) {
     DefaultOutlinedTextField(
         modifier = modifier.heightIn(min = 40.dp),
-        value = value?.toString() ?: "",
+        value = value.toString(),
         onValueChange = {
             if (it.length > maxCharCount) {
                 return@DefaultOutlinedTextField
             }
 
-            if (value == 0) {
-                onValueChange(it.replace("0", "").toIntOrNull())
+            val number = if (value == 0) {
+                it.replace("0", "").toIntOrNull()
             } else {
-                onValueChange(it.toIntOrNull())
+                it.toIntOrNull()
             }
+
+            onValueChange(number ?: 0)
         },
         textStyle = MaterialTheme.typography.bodyLarge.copy(textAlign = TextAlign.Center),
         colors = TextFieldDefaults.outlinedTextFieldColors(

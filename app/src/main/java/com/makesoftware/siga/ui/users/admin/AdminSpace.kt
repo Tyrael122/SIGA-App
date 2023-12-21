@@ -52,7 +52,10 @@ fun AdminSpace(onLogout: () -> Unit) {
                 currentRoute = currentRoute,
             )
         }) {
-        AdminNavGraph(navController = navController, paddingValues = it)
+
+        AdminNavGraph(
+            navController = navController, paddingValues = it
+        )
     }
 }
 

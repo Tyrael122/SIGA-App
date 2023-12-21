@@ -13,10 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.makesoftware.siga.data.DataGridView
+import com.makesoftware.siga.network.FetchResult
 import com.makesoftware.siga.ui.commons.components.DataGrid
 import com.makesoftware.siga.ui.commons.components.DataGridColumnProperties
-import com.makesoftware.siga.ui.commons.components.DataGridRowContent
-import com.makesoftware.siga.network.FetchResult
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

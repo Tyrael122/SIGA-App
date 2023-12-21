@@ -49,10 +49,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.makesoftware.siga.data.DataGridView
+import com.makesoftware.siga.network.ErrorType
+import com.makesoftware.siga.network.FetchResult
 import com.makesoftware.siga.ui.theme.AlternativeColorScheme
 import com.makesoftware.siga.ui.theme.DataGridTypograhpy
-import com.makesoftware.siga.network.FetchResult
-import com.makesoftware.siga.network.ErrorType
 
 @Composable
 fun <T : DataGridView> DataGrid(

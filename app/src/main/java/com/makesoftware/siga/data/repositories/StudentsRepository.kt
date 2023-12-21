@@ -1,14 +1,17 @@
 package com.makesoftware.siga.data.repositories
 
-import com.makesoftware.siga.data.Course
 import com.makesoftware.siga.data.Student
 import com.makesoftware.siga.data.datasources.RemoteDataSource
 
 class StudentsRepository(
     private val remoteDataSource: RemoteDataSource
-) {
+): BasicCrudRepository<Student> {
 
-    suspend fun fetchStudent(): List<Student> {
+    override suspend fun fetchAll(): List<Student> {
         return remoteDataSource.fetchStudent()
+    }
+
+    override suspend fun save(entity: Student) {
+        TODO("Not yet implemented")
     }
 }

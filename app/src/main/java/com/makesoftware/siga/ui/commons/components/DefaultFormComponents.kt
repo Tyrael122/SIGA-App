@@ -67,7 +67,7 @@ fun FormTextField(
 fun FormNumberTextField(
     modifier: Modifier = Modifier,
     value: Int,
-    onValueChange: (Int?) -> Unit,
+    onValueChange: (Int) -> Unit,
     fieldDescription: String,
     maxCharCount: Int = 2,
     isReadOnly: Boolean? = null,

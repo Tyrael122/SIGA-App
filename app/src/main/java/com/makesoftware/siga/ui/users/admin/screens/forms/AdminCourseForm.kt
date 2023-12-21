@@ -31,12 +31,6 @@ fun AdminCourseForm(
         )
 
         FormTextField(
-            value = course.acronym,
-            onValueChange = { updateCourseData(course.copy(acronym = it)) },
-            placeholderText = "Sigla",
-        )
-
-        FormTextField(
             value = course.description,
             onValueChange = { updateCourseData(course.copy(description = it)) },
             placeholderText = "Descrição",
@@ -45,13 +39,13 @@ fun AdminCourseForm(
 
         FormNumberTextField(
             value = course.semestersAmount, onValueChange = {
-                updateCourseData(course.copy(semestersAmount = it ?: 0))
+                updateCourseData(course.copy(semestersAmount = it))
             }, fieldDescription = "Quantidade de semestres"
         )
 
         FormNumberTextField(
             value = course.semestersToFinish, onValueChange = {
-                updateCourseData(course.copy(semestersToFinish = it ?: 0))
+                updateCourseData(course.copy(semestersToFinish = it))
             }, fieldDescription = "Semestres para finalização"
         )
 

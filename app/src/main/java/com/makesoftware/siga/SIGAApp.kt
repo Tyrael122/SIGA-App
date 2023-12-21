@@ -8,11 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.makesoftware.siga.ui.users.admin.AdminSpace
 import com.makesoftware.siga.ui.commons.login.LoginFormScreen
 import com.makesoftware.siga.ui.commons.login.WelcomeScreen
 import com.makesoftware.siga.ui.theme.SIGATheme
 import com.makesoftware.siga.ui.users.admin.AdminRoutes
+import com.makesoftware.siga.ui.users.admin.AdminSpace
 
 class MainRoutes {
     companion object {
@@ -26,7 +26,7 @@ class StartDestinations {
     companion object {
 //        const val ADMIN = AdminRoutes.HOME
 //        const val APP = MainRoutes.WELCOME_SCREEN
-        const val ADMIN = AdminRoutes.COURSES
+        const val ADMIN = AdminRoutes.STUDENTS
         const val APP = MainRoutes.ADMIN_SPACE
     }
 }

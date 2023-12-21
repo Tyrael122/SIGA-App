@@ -5,9 +5,13 @@ import com.makesoftware.siga.data.datasources.RemoteDataSource
 
 class CoursesRepository(
     private val remoteDataSource: RemoteDataSource
-) {
+) : BasicCrudRepository<Course> {
 
-    suspend fun fetchCourses(): List<Course> {
+    override suspend fun fetchAll(): List<Course> {
         return remoteDataSource.fetchCourses()
+    }
+
+    override suspend fun save(entity: Course) {
+        TODO("Not yet implemented")
     }
 }
