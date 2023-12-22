@@ -31,8 +31,8 @@ data class Teacher(
 data class Course(
     val name: String = "",
     val description: String = "",
-    val semestersAmount: Int = 0,
-    val semestersToFinish: Int = 0,
+    val numberOfSemesters: Int = 0,
+    val maxNumbersOfSemestersToFinish: Int = 0,
 ) : DataGridView {
 
     override fun toDataGridView(): DataGridRowContent {
@@ -45,21 +45,23 @@ data class Course(
 
     companion object {
         val columns: List<DataGridColumnProperties> = listOf(
-            DataGridColumnProperties("Nome", 2F, TextAlign.Start),
-            DataGridColumnProperties("Descrição", 1F, TextAlign.Center),
+            DataGridColumnProperties("Nome", 1F, TextAlign.Start),
+            DataGridColumnProperties("Descrição", 1F, TextAlign.Start),
         )
     }
 }
 
 @Serializable
 data class Student(
-    val name: String = "",
+    val course: Course = Course(),
+    val courseSemester: Int = 0,
+    val user: User = User(),
 ) : DataGridView {
 
     override fun toDataGridView(): DataGridRowContent {
         return DataGridRowContent(
             listOf(
-                this.name
+                this.user.firstName, this.course.name, this.courseSemester.toString()
             )
         )
     }

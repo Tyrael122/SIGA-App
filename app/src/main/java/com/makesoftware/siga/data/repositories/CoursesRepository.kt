@@ -12,6 +12,6 @@ class CoursesRepository(
     }
 
     override suspend fun save(entity: Course) {
-        TODO("Not yet implemented")
+        remoteDataSource.postCourse(entity)
     }
 }

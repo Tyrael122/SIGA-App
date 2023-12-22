@@ -56,10 +56,10 @@ class BasicCrudViewModel<T>(
         }
     }
 
-    fun clearSelectedEntity() {
-        updateSelectedEntity(
-            entityFactory()
-        )
+    fun clearForm() {
+        _uiState.update {
+            it.copy(selectedEntity = entityFactory(), isEntityBeingUpdated = false)
+        }
     }
 
     fun updateEntity() {
@@ -71,14 +71,15 @@ class BasicCrudViewModel<T>(
             try {
                 repository.save(_uiState.value.selectedEntity)
             } catch (e: Exception) {
-                Log.d("TeacherViewModel", "Error: ${e.message}")
+                Log.e("TeacherViewModel", "Error: ${e.message}")
                 Toast.makeText(context, "Erro ao salvar.", Toast.LENGTH_SHORT).show()
 
                 return@launch
             }
 
             Toast.makeText(context, "Salvo com sucesso.", Toast.LENGTH_SHORT).show()
-            clearSelectedEntity()
+
+            clearForm()
         }
     }
 

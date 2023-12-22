@@ -12,6 +12,8 @@ class StudentsRepository(
     }
 
     override suspend fun save(entity: Student) {
-        TODO("Not yet implemented")
+        val postedUser = remoteDataSource.postUser(entity.user)
+
+        remoteDataSource.postStudent(postedUser.id, entity)
     }
 }

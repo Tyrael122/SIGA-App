@@ -25,29 +25,7 @@ fun AdminTeacherForm(
             updateTeacherData(teacher.copy(user = incomingUser))
         }
 
-        FormTextField(
-            value = user.firstName, onValueChange = {
-                updateUser(user.copy(firstName = it))
-            }, placeholderText = "Nome"
-        )
-
-        FormTextField(
-            value = user.cpf, onValueChange = {
-                updateUser(user.copy(cpf = it))
-            }, placeholderText = "CPF"
-        )
-
-        FormTextField(
-            value = user.email, onValueChange = {
-                updateUser(user.copy(email = it))
-            }, placeholderText = "Email"
-        )
-
-        FormTextField(
-            value = user.password, onValueChange = {
-                updateUser(user.copy(password = it))
-            }, placeholderText = "Senha"
-        )
+        UserForm(user, updateUser)
 
         FormTextField(
             value = teacher.urlCurriculoLattes, onValueChange = {
@@ -55,4 +33,32 @@ fun AdminTeacherForm(
             }, placeholderText = "URL do Currículo Lattes", minLines = 2
         )
     }
+}
+
+
+@Composable
+fun UserForm(user: User, updateUser: (User) -> Unit) {
+    FormTextField(
+        value = user.firstName, onValueChange = {
+            updateUser(user.copy(firstName = it))
+        }, placeholderText = "Nome"
+    )
+
+    FormTextField(
+        value = user.cpf, onValueChange = {
+            updateUser(user.copy(cpf = it))
+        }, placeholderText = "CPF"
+    )
+
+    FormTextField(
+        value = user.email, onValueChange = {
+            updateUser(user.copy(email = it))
+        }, placeholderText = "Email"
+    )
+
+    FormTextField(
+        value = user.password, onValueChange = {
+            updateUser(user.copy(password = it))
+        }, placeholderText = "Senha"
+    )
 }

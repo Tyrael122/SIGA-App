@@ -37,8 +37,8 @@ class FetchJobManager {
                     )
 
                 } catch (ex: Exception) {
-                    Log.d("FetchJobManager", "Exception: ${ex.message}")
-                    Log.d("FetchJobManager", "Exception cause: ${ex.cause?.message}")
+                    Log.e("FetchJobManager", "Exception: ${ex.message}")
+                    Log.e("FetchJobManager", "Exception cause: ${ex.cause?.message}")
                     updateFetchResult(
                         FetchResult.Error(
                             ErrorType.UNKNOWN, "Oops. Algo deu errado. Tente novamente."
@@ -49,10 +49,11 @@ class FetchJobManager {
         }
     }
 
-    private fun <T> arePrerequisitesMet(
-        updateDataGridState: (FetchResult<T>) -> Unit, context: Context
+    private fun <K> arePrerequisitesMet(
+        updateDataGridState: (FetchResult<K>) -> Unit, context: Context
     ): Boolean {
         if (!hasNetworkConnection(context)) {
+            Log.d("FetchJobManager", "No network connection.")
             updateDataGridState(
                 FetchResult.Error(
                     ErrorType.NO_NETWORK, "Você não está conectado à internet."

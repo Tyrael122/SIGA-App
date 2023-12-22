@@ -10,12 +10,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.makesoftware.siga.data.DataGridView
 import com.makesoftware.siga.network.FetchResult
 import com.makesoftware.siga.ui.commons.components.DataGrid
 import com.makesoftware.siga.ui.commons.components.DataGridColumnProperties
+import com.makesoftware.siga.ui.users.admin.viewmodels.BasicCrudViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,4 +54,26 @@ fun <T : DataGridView> AdminDataViewScreen(
             fetchData = fetchItems,
         )
     }
+}
+
+@Composable
+fun <T : DataGridView> AdminDataViewScreenWrapper(
+    modifier: Modifier = Modifier,
+    navigateToFormScreen: () -> Unit,
+    columns: List<DataGridColumnProperties>,
+    viewModel: BasicCrudViewModel<T>,
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    AdminDataViewScreen(modifier = modifier,
+        columns = columns,
+        onItemClick = { viewModel.selectEntity(it) },
+        onAddEntityRequest = {
+            viewModel.clearForm()
+            navigateToFormScreen()
+        },
+        fetchItems = { viewModel.fetchEntity(context) },
+        fetchResult = uiState.fetchResult
+    )
 }

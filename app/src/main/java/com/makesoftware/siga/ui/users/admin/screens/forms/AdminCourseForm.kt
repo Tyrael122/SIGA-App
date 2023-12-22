@@ -38,14 +38,14 @@ fun AdminCourseForm(
         )
 
         FormNumberTextField(
-            value = course.semestersAmount, onValueChange = {
-                updateCourseData(course.copy(semestersAmount = it))
+            value = course.numberOfSemesters, onValueChange = {
+                updateCourseData(course.copy(numberOfSemesters = it))
             }, fieldDescription = "Quantidade de semestres"
         )
 
         FormNumberTextField(
-            value = course.semestersToFinish, onValueChange = {
-                updateCourseData(course.copy(semestersToFinish = it))
+            value = course.maxNumbersOfSemestersToFinish, onValueChange = {
+                updateCourseData(course.copy(maxNumbersOfSemestersToFinish = it))
             }, fieldDescription = "Semestres para finalização"
         )
 

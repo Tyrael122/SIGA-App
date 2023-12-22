@@ -95,32 +95,29 @@ fun NavGraphBuilder.studentScreens(
     viewModel: BasicCrudViewModel<Student>, navController: NavHostController
 ) {
     composable(AdminRoutes.STUDENTS) {
-        val studentUiState by viewModel.uiState.collectAsState()
-        val context = LocalContext.current
-
-        AdminDataViewScreen(columns = Student.columns,
-            onAddEntityRequest = { /*TODO*/ },
-            fetchResult = studentUiState.fetchResult,
-            onItemClick = {
-                viewModel.selectEntity(it)
-                navController.navigate(AdminRoutes.STUDENT_FORM)
-            },
-            fetchItems = {
-                viewModel.fetchEntity(context)
-            })
+        AdminDataViewScreenWrapper(navigateToFormScreen = {
+            navController.navigate(AdminRoutes.STUDENT_FORM)
+        }, columns = Student.columns, viewModel = viewModel)
     }
 
     composable(AdminRoutes.STUDENT_FORM) {
         val studentUiState by viewModel.uiState.collectAsState()
         val context = LocalContext.current
 
-        AdminStudentForm(student = studentUiState.selectedEntity, updateStudentData = {
-            viewModel.updateSelectedEntity(it)
-        }, updateStudent = {
-            viewModel.updateEntity()
-        }, saveStudent = {
-            viewModel.saveEntity(context)
-        }, isUpdate = studentUiState.isEntityBeingUpdated
+        AdminStudentForm(
+            student = studentUiState.selectedEntity,
+            updateStudentData = {
+                viewModel.updateSelectedEntity(it)
+            },
+            updateStudent = {
+                viewModel.updateEntity()
+            },
+            saveStudent = {
+                viewModel.saveEntity(context)
+            },
+            isUpdate = studentUiState.isEntityBeingUpdated,
+            onSelectSubjectsRequest = { /* TODO */ },
+            loadCourses = { emptyList() },
         )
     }
 }
@@ -129,18 +126,9 @@ fun NavGraphBuilder.teacherScreens(
     viewModel: BasicCrudViewModel<Teacher>, navController: NavHostController
 ) {
     composable(AdminRoutes.TEACHERS) {
-        val uiState by viewModel.uiState.collectAsState()
-        val context = LocalContext.current
-
-        AdminDataViewScreen(columns = Teacher.columns, onAddEntityRequest = {
-            viewModel.clearSelectedEntity()
+        AdminDataViewScreenWrapper(navigateToFormScreen = {
             navController.navigate(AdminRoutes.TEACHER_FORM)
-        }, fetchResult = uiState.fetchResult, fetchItems = {
-            viewModel.fetchEntity(context)
-        }, onItemClick = {
-            viewModel.selectEntity(it)
-            navController.navigate(AdminRoutes.TEACHER_FORM)
-        })
+        }, columns = Teacher.columns, viewModel = viewModel)
     }
 
     composable(AdminRoutes.TEACHER_FORM) {
@@ -161,18 +149,9 @@ fun NavGraphBuilder.courseScreens(
     viewModel: BasicCrudViewModel<Course>, navController: NavHostController
 ) {
     composable(AdminRoutes.COURSES) {
-        val courseUiState by viewModel.uiState.collectAsState()
-        val context = LocalContext.current
-
-        AdminDataViewScreen(columns = Course.columns, onAddEntityRequest = {
-            viewModel.clearSelectedEntity()
+        AdminDataViewScreenWrapper(navigateToFormScreen = {
             navController.navigate(AdminRoutes.COURSE_FORM)
-        }, fetchResult = courseUiState.fetchResult, fetchItems = {
-            viewModel.fetchEntity(context)
-        }, onItemClick = {
-            viewModel.selectEntity(it)
-            navController.navigate(AdminRoutes.COURSE_FORM)
-        })
+        }, columns = Course.columns, viewModel = viewModel)
     }
 
     composable(AdminRoutes.COURSE_FORM) {
@@ -194,20 +173,10 @@ fun NavGraphBuilder.courseScreens(
 fun NavGraphBuilder.subjectScreens(
     viewModel: BasicCrudViewModel<Subject>, navController: NavHostController
 ) {
-
     composable(AdminRoutes.SUBJECTS) {
-        val subjectUiState by viewModel.uiState.collectAsState()
-        val context = LocalContext.current
-
-        AdminDataViewScreen(
-            columns = Subject.columns,
-            onAddEntityRequest = {
-                viewModel.clearSelectedEntity()
-                navController.navigate(AdminRoutes.SUBJECT_FORM)
-            },
-            fetchItems = { viewModel.fetchEntity(context) },
-            fetchResult = subjectUiState.fetchResult,
-        )
+        AdminDataViewScreenWrapper(navigateToFormScreen = {
+            navController.navigate(AdminRoutes.SUBJECT_FORM)
+        }, columns = Subject.columns, viewModel = viewModel)
     }
 
     composable(AdminRoutes.SUBJECT_FORM) {

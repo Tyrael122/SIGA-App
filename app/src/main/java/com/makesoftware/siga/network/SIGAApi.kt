@@ -12,12 +12,13 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface SIGAApi {
-    @GET("courses")
+    @GET(EndpointPrefixes.COURSE)
     suspend fun fetchCourses(): List<Course>
 
     @GET(EndpointPrefixes.TEACHER)
     suspend fun fetchTeachers(): List<Teacher>
 
+    @GET(EndpointPrefixes.STUDENT)
     suspend fun fetchStudent(): List<Student>
 
     @POST("${EndpointPrefixes.USER}/{id}/${EndpointPrefixes.TEACHER}")
@@ -26,7 +27,7 @@ interface SIGAApi {
     @POST(EndpointPrefixes.USER)
     suspend fun postUser(@Body user: User): User
 
-    @POST("${EndpointPrefixes.USER}/{id}/students")
+    @POST("${EndpointPrefixes.USER}/{id}/${EndpointPrefixes.STUDENT}")
     suspend fun postStudent(@Path("id") userId: Long, @Body student: Student)
 
     @GET(EndpointPrefixes.SUBJECT)
@@ -34,4 +35,7 @@ interface SIGAApi {
 
     @POST(EndpointPrefixes.SUBJECT)
     suspend fun postSubject(@Body subject: Subject)
+
+    @POST(EndpointPrefixes.COURSE)
+    suspend fun postCourse(@Body entity: Course)
 }

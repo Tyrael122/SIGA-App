@@ -82,4 +82,10 @@ class RemoteDataSource(
             retrofitService.postSubject(subject)
         }
     }
+
+    suspend fun postCourse(entity: Course) {
+        withContext(ioDispatcher) {
+            retrofitService.postCourse(entity)
+        }
+    }
 }

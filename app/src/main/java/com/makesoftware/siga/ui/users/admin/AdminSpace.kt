@@ -100,6 +100,7 @@ fun AppBarTitle(items: List<NavigationItem>, currentRoute: String, modifier: Mod
         AdminRoutes.COURSE_FORM -> "Cadastro\n de Curso"
         AdminRoutes.STUDENT_FORM -> "Cadastro\n de Aluno"
         AdminRoutes.TEACHER_FORM -> "Cadastro\n de Professor"
+        AdminRoutes.SUBJECT_FORM -> "Cadastro\n de Matéria"
         else -> ""
     }
 

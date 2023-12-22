@@ -35,7 +35,8 @@ fun AdminSubjectForm(
         FormNumberTextField(
             value = subject.workload,
             onValueChange = { updateSubjectData(subject.copy(workload = it)) },
-            fieldDescription = "Carga horária"
+            fieldDescription = "Carga horária",
+            maxCharCount = 3
         )
 
         FormNumberTextField(
