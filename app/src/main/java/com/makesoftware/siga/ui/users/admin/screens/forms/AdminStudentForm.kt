@@ -15,7 +15,6 @@ import com.makesoftware.siga.data.User
 import com.makesoftware.siga.ui.commons.components.FormDropdownMenu
 import com.makesoftware.siga.ui.commons.components.FormNumberTextField
 import com.makesoftware.siga.ui.commons.components.FormSelectableDataGrid
-import com.makesoftware.siga.ui.commons.components.FormTextField
 import com.makesoftware.siga.ui.users.admin.screens.AdminFormScreen
 
 @Composable
@@ -25,7 +24,7 @@ fun AdminStudentForm(
     saveStudent: () -> Unit,
     updateStudent: () -> Unit,
     onSelectSubjectsRequest: () -> Unit,
-    loadCourses: () -> List<Course>,
+    courses: List<Course>,
     isUpdate: Boolean
 ) {
     AdminFormScreen(

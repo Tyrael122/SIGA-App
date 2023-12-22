@@ -62,6 +62,9 @@ fun <T : DataGridView> DataGrid(
     columns: List<DataGridColumnProperties>,
     fetchData: () -> Unit,
     fetchResult: FetchResult<T>,
+    isDatagridItemSelectable: Boolean = false,
+    onCommitSelection: (List<T>) -> Unit = {},
+    onSelectItem: (T) -> Unit = {},
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,

@@ -21,24 +21,27 @@ class BasicCrudViewModel<T>(
     private val repository: BasicCrudRepository<T>, private val entityFactory: () -> T
 ) : ViewModel() {
 
-
-    private var _uiState = MutableStateFlow(
-        UiState(
-            selectedEntity = entityFactory()
-        )
-    )
+    private var _uiState = MutableStateFlow(UiState(selectedEntity = entityFactory()))
     val uiState = _uiState.asStateFlow()
+
+    private var _selectableUiState = MutableStateFlow(SelectableUiState<T>())
+    val selectableUiState = _selectableUiState.asStateFlow()
 
     private val fetchJobManager = FetchJobManager()
 
+    // TODO: Make a NetworkManager class to handle network stuff, and use DI to inject it into the view model.
+    //  This will allow us to call the fetchAllEntities method without passing context. Don't pass context to viewmodel.
+//    init {
+//        fetchAllEntities(context)
+//    }
 
-    fun selectEntity(entity: T) {
+    fun selectEntityForUpdate(entity: T) {
         _uiState.update {
             it.copy(selectedEntity = entity, isEntityBeingUpdated = true)
         }
     }
 
-    fun fetchEntity(context: Context) {
+    fun fetchAllEntities(context: Context) {
         viewModelScope.launch {
             fetchJobManager.doFetchJob(updateFetchResult = { fetchResult ->
                 _uiState.update {
@@ -56,7 +59,25 @@ class BasicCrudViewModel<T>(
         }
     }
 
-    fun clearForm() {
+    fun setOnCommitSelection(onCommitSelection: (List<T>) -> Unit) {
+        _selectableUiState.update {
+            it.copy(onCommitSelection = onCommitSelection)
+        }
+    }
+
+    fun clearSelectableState() {
+        _selectableUiState.update {
+            it.copy(selectedEntities = emptyList(), onCommitSelection = {}, isViewSelectable = false)
+        }
+    }
+
+    fun updateSelectedEntities(entities: List<T>) {
+        _selectableUiState.update {
+            it.copy(selectedEntities = entities)
+        }
+    }
+
+    fun clearFormState() {
         _uiState.update {
             it.copy(selectedEntity = entityFactory(), isEntityBeingUpdated = false)
         }
@@ -72,14 +93,24 @@ class BasicCrudViewModel<T>(
                 repository.save(_uiState.value.selectedEntity)
             } catch (e: Exception) {
                 Log.e("TeacherViewModel", "Error: ${e.message}")
+
+                // TODO: Refactor these toasts out of the viewmodel.
                 Toast.makeText(context, "Erro ao salvar.", Toast.LENGTH_SHORT).show()
 
                 return@launch
             }
 
+            // TODO: Refactor these toasts out of the viewmodel.
             Toast.makeText(context, "Salvo com sucesso.", Toast.LENGTH_SHORT).show()
 
-            clearForm()
+            clearFormState()
+        }
+    }
+
+    fun getFetchResultSucessItemsOrEmptyList(): List<T> {
+        return when (val fetchResult = _uiState.value.fetchResult) {
+            is FetchResult.Success -> fetchResult.items
+            else -> emptyList()
         }
     }
 
@@ -102,4 +133,10 @@ data class UiState<T>(
     val selectedEntity: T,
     val isEntityBeingUpdated: Boolean = false,
     val fetchResult: FetchResult<T> = FetchResult.Success(),
+)
+
+data class SelectableUiState<T>(
+    val isViewSelectable: Boolean = false,
+    val selectedEntities: List<T> = emptyList(),
+    val onCommitSelection: (List<T>) -> Unit = {},
 )

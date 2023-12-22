@@ -84,7 +84,7 @@ fun AdminNavGraph(
             AdminHomeScreen()
         }
 
-        studentScreens(studentViewModel, navController)
+        studentScreens(studentViewModel, subjectViewModel, courseViewModel, navController)
         courseScreens(courseViewModel, navController)
         teacherScreens(teacherViewModel, navController)
         subjectScreens(subjectViewModel, navController)
@@ -92,7 +92,10 @@ fun AdminNavGraph(
 }
 
 fun NavGraphBuilder.studentScreens(
-    viewModel: BasicCrudViewModel<Student>, navController: NavHostController
+    viewModel: BasicCrudViewModel<Student>,
+    subjectsViewModel: BasicCrudViewModel<Subject>,
+    courseViewModel: BasicCrudViewModel<Course>,
+    navController: NavHostController
 ) {
     composable(AdminRoutes.STUDENTS) {
         AdminDataViewScreenWrapper(navigateToFormScreen = {
@@ -116,8 +119,20 @@ fun NavGraphBuilder.studentScreens(
                 viewModel.saveEntity(context)
             },
             isUpdate = studentUiState.isEntityBeingUpdated,
-            onSelectSubjectsRequest = { /* TODO */ },
-            loadCourses = { emptyList() },
+            onSelectSubjectsRequest = {
+                subjectsViewModel.setOnCommitSelection {
+                    navController.navigate(AdminRoutes.STUDENT_FORM)
+
+                    viewModel.updateSelectedEntity(
+                        studentUiState.selectedEntity.copy(
+                            subjects = it
+                        )
+                    )
+                }
+
+                navController.navigate(AdminRoutes.SUBJECTS)
+            },
+            courses = courseViewModel.getFetchResultSucessItemsOrEmptyList(),
         )
     }
 }

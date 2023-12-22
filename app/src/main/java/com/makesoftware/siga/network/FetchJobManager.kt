@@ -50,11 +50,11 @@ class FetchJobManager {
     }
 
     private fun <K> arePrerequisitesMet(
-        updateDataGridState: (FetchResult<K>) -> Unit, context: Context
+        updateFetchResult: (FetchResult<K>) -> Unit, context: Context
     ): Boolean {
         if (!hasNetworkConnection(context)) {
             Log.d("FetchJobManager", "No network connection.")
-            updateDataGridState(
+            updateFetchResult(
                 FetchResult.Error(
                     ErrorType.NO_NETWORK, "Você não está conectado à internet."
                 )

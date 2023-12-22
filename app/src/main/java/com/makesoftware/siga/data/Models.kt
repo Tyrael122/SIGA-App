@@ -55,6 +55,7 @@ data class Course(
 data class Student(
     val course: Course = Course(),
     val courseSemester: Int = 0,
+    val subjects: List<Subject> = emptyList(),
     val user: User = User(),
 ) : DataGridView {
 

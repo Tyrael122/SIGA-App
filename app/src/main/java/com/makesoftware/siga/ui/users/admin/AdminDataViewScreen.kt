@@ -29,7 +29,10 @@ fun <T : DataGridView> AdminDataViewScreen(
     onItemClick: (T) -> Unit = {},
     onAddEntityRequest: () -> Unit,
     fetchItems: () -> Unit,
-    fetchResult: FetchResult<T>
+    fetchResult: FetchResult<T>,
+    isViewSelectable: Boolean = false,
+    onCommitSelection: (List<T>) -> Unit = {},
+    onSelectItem: (T) -> Unit = {},
 ) {
     Scaffold(
         floatingActionButton = {
@@ -52,6 +55,9 @@ fun <T : DataGridView> AdminDataViewScreen(
             fetchResult = fetchResult,
             columns = columns,
             fetchData = fetchItems,
+            isDatagridItemSelectable = isViewSelectable,
+            onCommitSelection = onCommitSelection,
+            onSelectItem = onSelectItem,
         )
     }
 }
@@ -64,16 +70,23 @@ fun <T : DataGridView> AdminDataViewScreenWrapper(
     viewModel: BasicCrudViewModel<T>,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val selectableUiState by viewModel.selectableUiState.collectAsState()
     val context = LocalContext.current
 
-    AdminDataViewScreen(modifier = modifier,
+    AdminDataViewScreen(
+        modifier = modifier,
         columns = columns,
-        onItemClick = { viewModel.selectEntity(it) },
+        onItemClick = { viewModel.selectEntityForUpdate(it) },
         onAddEntityRequest = {
-            viewModel.clearForm()
+            viewModel.clearFormState()
             navigateToFormScreen()
         },
-        fetchItems = { viewModel.fetchEntity(context) },
-        fetchResult = uiState.fetchResult
+        fetchItems = { viewModel.fetchAllEntities(context) },
+        fetchResult = uiState.fetchResult,
+        isViewSelectable = selectableUiState.isViewSelectable,
+        onCommitSelection = {
+            viewModel.clearSelectableState()
+            selectableUiState.onCommitSelection(it)
+        },
     )
 }
