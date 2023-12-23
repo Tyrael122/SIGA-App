@@ -28,6 +28,8 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -47,12 +49,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.makesoftware.siga.data.Course
 import com.makesoftware.siga.data.DataGridView
 import com.makesoftware.siga.network.ErrorType
 import com.makesoftware.siga.network.FetchResult
 import com.makesoftware.siga.ui.theme.AlternativeColorScheme
 import com.makesoftware.siga.ui.theme.DataGridTypograhpy
+import com.makesoftware.siga.ui.theme.SIGATheme
+
 
 @Composable
 fun <T : DataGridView> DataGrid(
@@ -67,7 +73,6 @@ fun <T : DataGridView> DataGrid(
     onSelectItem: (T) -> Unit = {},
 ) {
     Column(
-        verticalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
             .shadow(1.dp, RoundedCornerShape(10.dp))
             .fillMaxSize()
@@ -75,23 +80,64 @@ fun <T : DataGridView> DataGrid(
             .background(backgroundColor)
             .padding(top = 12.dp)
     ) {
+        var selectedItems by remember { mutableStateOf(listOf<T>()) }
+
         Column(
             verticalArrangement = Arrangement.spacedBy(20.dp),
             modifier = Modifier.padding(horizontal = 12.dp)
         ) {
             SearchBar()
 
+            val items = if (fetchResult is FetchResult.Success) {
+                fetchResult.items
+            } else {
+                emptyList()
+            }
+
             DataGridHeader(
-                columns = columns, modifier = Modifier.heightIn(min = 45.dp)
+                modifier = Modifier.heightIn(min = 45.dp),
+                selectAllItems = {
+                    // TODO: Refactor this urgently!!
+                    selectedItems = if (selectedItems.size == items.size) {
+                        emptyList()
+                    } else {
+                        items
+                    }
+                },
+                isAllItemsSelected = { selectedItems.size == items.size },
+                isDataGridItemSelectable = isDatagridItemSelectable,
+                columns = columns,
             )
         }
 
+        // TODO: Refactor the selection logic of the datagrid, especially the parameters I'm constantly passing (isDataGridItemSelectable).
         ItemGrid(
-            columns = columns,
             onItemClick = onItemClick,
             fetchData = fetchData,
+            columns = columns,
             fetchResult = fetchResult,
+            onSelectItem = {
+                // TODO: Refactor this function.
+                selectedItems = if (selectedItems.contains(it)) {
+                    selectedItems.minus(it)
+                } else {
+                    selectedItems.plus(it)
+                }
+
+                onSelectItem(it)
+            },
+            isDatagridItemSelectable = isDatagridItemSelectable,
+            isItemSelected = { selectedItems.contains(it) },
+            modifier = Modifier.weight(1F)
         )
+
+        if (isDatagridItemSelectable) {
+            DefaultElevatedButton(
+                onClick = { onCommitSelection(selectedItems) },
+                text = "Salvar",
+                modifier = Modifier.padding(vertical = 20.dp)
+            )
+        }
     }
 }
 
@@ -112,23 +158,35 @@ private fun SearchBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun DataGridHeader(modifier: Modifier = Modifier, columns: List<DataGridColumnProperties>) {
+private fun DataGridHeader(
+    modifier: Modifier = Modifier,
+    selectAllItems: () -> Unit,
+    columns: List<DataGridColumnProperties>,
+    isDataGridItemSelectable: Boolean,
+    isAllItemsSelected: () -> Boolean,
+) {
     DataGridRow(
         columnContentMap = columns.associateWith { it.name },
         style = DataGridTypograhpy.bodyMedium,
         textColor = MaterialTheme.colorScheme.onSurface,
+        isSelectable = isDataGridItemSelectable,
+        onSelect = selectAllItems,
+        isItemSelected = isAllItemsSelected(),
         modifier = modifier,
     )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun <T : DataGridView> ItemGrid(
+private fun <V : DataGridView> ItemGrid(
     modifier: Modifier = Modifier,
-    onItemClick: (T) -> Unit,
+    onItemClick: (V) -> Unit,
     fetchData: () -> Unit,
     columns: List<DataGridColumnProperties>,
-    fetchResult: FetchResult<T>,
+    fetchResult: FetchResult<V>,
+    onSelectItem: (V) -> Unit,
+    isDatagridItemSelectable: Boolean,
+    isItemSelected: (V) -> Boolean,
 ) {
 
     val isLoading = fetchResult is FetchResult.Loading
@@ -138,9 +196,7 @@ private fun <T : DataGridView> ItemGrid(
     })
 
     Box(
-        modifier
-            .fillMaxSize()
-            .pullRefresh(pullRefreshState)
+        modifier.pullRefresh(pullRefreshState)
     ) {
         when (fetchResult) {
             is FetchResult.Error -> {
@@ -148,18 +204,19 @@ private fun <T : DataGridView> ItemGrid(
                     error = fetchResult,
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 )
             }
 
             is FetchResult.Success -> {
+                val items = fetchResult.items
                 LazyItemGrid(
-                    items = fetchResult.items.map { it.toDataGridView() },
+                    items = items.map { it.toDataGridView() },
                     columns = columns,
-                    onItemClick = {
-                        onItemClick(fetchResult.items[it])
-                    },
+                    onItemClick = { onItemClick(items[it]) },
+                    isDataGridItemSelectable = isDatagridItemSelectable,
+                    onSelectItem = { onSelectItem(items[it]) },
+                    isItemSelected = { isItemSelected(items[it]) },
                 )
             }
 
@@ -187,10 +244,13 @@ private fun LazyItemGrid(
     modifier: Modifier = Modifier,
     items: List<DataGridRowContent>,
     columns: List<DataGridColumnProperties>,
-    onItemClick: (Int) -> Unit
+    onItemClick: (Int) -> Unit,
+    onSelectItem: (Int) -> Unit,
+    isItemSelected: (Int) -> Boolean,
+    isDataGridItemSelectable: Boolean,
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
     ) {
 
         if (items.isEmpty()) {
@@ -210,6 +270,9 @@ private fun LazyItemGrid(
             val columnContentMap = generateColumnContentMap(columns, dataGridRowContent)
 
             DataGridRow(columnContentMap = columnContentMap,
+                isSelectable = isDataGridItemSelectable,
+                onSelect = { onSelectItem(index) },
+                isItemSelected = isItemSelected(index),
                 modifier = Modifier
                     .heightIn(min = 60.dp)
                     .background(backgroundColor)
@@ -221,16 +284,28 @@ private fun LazyItemGrid(
 
 @Composable
 private fun DataGridRow(
-    columnContentMap: Map<DataGridColumnProperties, String>,
     modifier: Modifier = Modifier,
+    columnContentMap: Map<DataGridColumnProperties, String>,
     style: TextStyle = DataGridTypograhpy.bodyLarge,
     textColor: Color = MaterialTheme.colorScheme.onSurface,
+    isSelectable: Boolean,
+    isItemSelected: Boolean,
+    onSelect: () -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier.fillMaxWidth()
     ) {
+        if (isSelectable) {
+            Checkbox(
+                checked = isItemSelected,
+                onCheckedChange = { onSelect() },
+                colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.primary),
+                modifier = Modifier.padding(end = 10.dp)
+            )
+        }
+
         columnContentMap.forEach {
             val text = it.value
             val dataGridColumn = it.key
@@ -328,4 +403,32 @@ private fun generateColumnContentMap(
     }
 
     return columnContentMap
+}
+
+@Preview
+@Composable
+fun DataGridPreview() {
+    SIGATheme(useDarkTheme = false) {
+        DataGrid(
+            columns = listOf(
+                DataGridColumnProperties("Nome", 1F, TextAlign.Start),
+                DataGridColumnProperties("Descrição", 1F, TextAlign.Start),
+            ), fetchData = {}, fetchResult = FetchResult.Success(
+                listOf(
+                    Course("Ciência da Computação", "Curso de computação", 10, 5),
+                    Course("Engenharia de Software", "Curso de computação", 10, 5),
+                    Course("Direito", "Curso de computação", 10, 5),
+                    Course("Biologia", "Curso de computação", 10, 5),
+                    Course("Medicina", "Curso de computação", 10, 5),
+                    Course("Ciência da Computação", "Curso de computação", 10, 5),
+                    Course("Engenharia de Software", "Curso de computação", 10, 5),
+                    Course("Direito", "Curso de computação", 10, 5),
+                    Course("Biologia", "Curso de computação", 10, 5),
+                    Course("Medicina", "Curso de computação", 10, 5),
+                    Course("Ciência da Computação", "Curso de computação", 10, 5),
+                    Course("Engenharia de Software", "Curso de computação", 10, 5),
+                )
+            ), isDatagridItemSelectable = true
+        )
+    }
 }

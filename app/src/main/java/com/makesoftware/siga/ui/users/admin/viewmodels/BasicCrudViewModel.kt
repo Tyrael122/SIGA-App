@@ -13,6 +13,7 @@ import com.makesoftware.siga.network.FetchJobManager
 import com.makesoftware.siga.network.FetchResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
