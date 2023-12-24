@@ -152,6 +152,12 @@ fun FormSelectableDataGrid(
 @Composable
 fun FormDropdownMenu(
     modifier: Modifier = Modifier,
+
+    // Can change later to a List<Pair<Long, String>>.
+    // You could provide another function, onValueChanged, that would return the id of the selected item, when there was a match in the list.
+    // Provide a parameter called selectedValue too.
+    // Then, you wouldn't need to override the selectedOptionText. If you still did, you would need to override onSelectionChanged too.
+
     options: List<String>,
     selectedOptionText: String,
     onSelectionChanged: (String) -> Unit,

@@ -109,6 +109,8 @@ fun NavGraphBuilder.studentScreens(
 
         val context = LocalContext.current
 
+        courseViewModel.fetchAllEntities(context)
+
         AdminStudentForm(
             student = studentUiState.selectedEntity,
             updateStudentData = {
@@ -123,17 +125,15 @@ fun NavGraphBuilder.studentScreens(
             isUpdate = studentUiState.isEntityBeingUpdated,
             onSelectSubjectsRequest = {
                 // TODO: Maybe create a callback builder, and a way to create a custom callback if necessary. Wait for three repetitions to refactor this.
-                subjectsViewModel.setViewAsSelectableWithCallback {
+                subjectsViewModel.setViewAsSelectableWithCallback(studentUiState.selectedEntity.enrolledSubjects) {
                     navController.navigate(AdminRoutes.STUDENT_FORM)
 
                     viewModel.updateSelectedEntity(
                         studentUiState.selectedEntity.copy(
-                            subjects = it
+                            enrolledSubjects = it
                         )
                     )
                 }
-
-                subjectsViewModel.updateSelectedEntities(studentUiState.selectedEntity.subjects)
 
                 navController.navigate(AdminRoutes.SUBJECTS)
             },

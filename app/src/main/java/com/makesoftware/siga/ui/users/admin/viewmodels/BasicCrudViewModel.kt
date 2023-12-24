@@ -59,15 +59,17 @@ class BasicCrudViewModel<T>(
         }
     }
 
-    fun setViewAsSelectableWithCallback(onCommitSelection: (List<T>) -> Unit) {
+    fun setViewAsSelectableWithCallback(
+        initialSelectedEntities: List<T>, onCommitSelection: (List<T>) -> Unit
+    ) {
+        _selectableUiState.update {
+            it.copy(
+                selectedEntities = initialSelectedEntities,
+            )
+        }
+
         _selectableUiState.update {
             it.copy(onCommitSelection = onCommitSelection, isViewSelectable = true)
-        }
-    }
-
-    fun updateSelectedEntities(selectedEntities: List<T>) {
-        _selectableUiState.update {
-            it.copy(selectedEntities = selectedEntities)
         }
     }
 

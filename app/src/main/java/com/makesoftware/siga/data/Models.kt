@@ -29,6 +29,7 @@ data class Teacher(
 
 @Serializable
 data class Course(
+    val id: Long = 0,
     val name: String = "",
     val description: String = "",
     val numberOfSemesters: Int = 0,
@@ -53,16 +54,16 @@ data class Course(
 
 @Serializable
 data class Student(
-    val course: Course = Course(),
+    val enrolledCourse: Course = Course(),
     val courseSemester: Int = 0,
-    val subjects: List<Subject> = emptyList(),
+    val enrolledSubjects: List<Subject> = emptyList(),
     val user: User = User(),
 ) : DataGridView {
 
     override fun toDataGridView(): DataGridRowContent {
         return DataGridRowContent(
             listOf(
-                this.user.firstName, this.course.name, this.courseSemester.toString()
+                this.user.firstName, this.enrolledCourse.name, this.courseSemester.toString()
             )
         )
     }
@@ -77,7 +78,16 @@ data class Student(
 }
 
 @Serializable
+data class StudentDTO(
+    val enrolledCourseId: Long,
+    val courseSemester: Int = 0,
+    val enrolledSubjectIds: List<Long> = emptyList(),
+    val user: User = User(),
+)
+
+@Serializable
 data class Subject(
+    val id: Long = 0,
     val name: String = "",
     val description: String = "",
     val workload: Int = 0,

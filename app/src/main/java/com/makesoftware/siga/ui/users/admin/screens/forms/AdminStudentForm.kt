@@ -48,22 +48,26 @@ fun AdminStudentForm(
             fieldDescription = "Semestre base",
         )
 
-        val cursos = listOf(
-            "Ciência da Computação", "Engenharia de Software", "Direito", "Biologia", "Medicina"
-        )
+        // TODO: This could be refactored to inside the FormDropdownMenu. But wait for another code repetition to do it.
         var selectedOptionText by remember { mutableStateOf("") }
-
         FormDropdownMenu(
-            options = cursos,
+            options = courses.map { it.name },
             selectedOptionText = selectedOptionText,
-            onSelectionChanged = { selectedOptionText = it },
+            onSelectionChanged = {
+                val selectedCourse = courses.find { course -> course.name == it }
+                selectedCourse?.let { course ->
+                    updateStudentData(student.copy(enrolledCourse = course))
+                }
+
+                selectedOptionText = it
+            },
             placeholder = { Text("Selecione um curso") },
         )
 
         FormSelectableDataGrid(
             infoText = "Disciplinas",
             onSelectRequest = onSelectSubjectsRequest,
-            numberOfSelectedItems = student.subjects.size,
+            numberOfSelectedItems = student.enrolledSubjects.size,
             modifier = Modifier.padding(top = 30.dp)
         )
     }

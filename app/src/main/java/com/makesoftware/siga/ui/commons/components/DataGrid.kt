@@ -429,18 +429,18 @@ fun DataGridPreview() {
                 DataGridColumnProperties("Descrição", 1F, TextAlign.Start),
             ), fetchData = {}, fetchResult = FetchResult.Success(
                 listOf(
-                    Course("Ciência da Computação", "Curso de computação", 10, 5),
-                    Course("Engenharia de Software", "Curso de computação", 10, 5),
-                    Course("Direito", "Curso de computação", 10, 5),
-                    Course("Biologia", "Curso de computação", 10, 5),
-                    Course("Medicina", "Curso de computação", 10, 5),
-                    Course("Ciência da Computação", "Curso de computação", 10, 5),
-                    Course("Engenharia de Software", "Curso de computação", 10, 5),
-                    Course("Direito", "Curso de computação", 10, 5),
-                    Course("Biologia", "Curso de computação", 10, 5),
-                    Course("Medicina", "Curso de computação", 10, 5),
-                    Course("Ciência da Computação", "Curso de computação", 10, 5),
-                    Course("Engenharia de Software", "Curso de computação", 10, 5),
+//                    Course("Ciência da Computação", "Curso de computação", 10, 5),
+//                    Course("Engenharia de Software", "Curso de computação", 10, 5),
+//                    Course("Direito", "Curso de computação", 10, 5),
+//                    Course("Biologia", "Curso de computação", 10, 5),
+//                    Course("Medicina", "Curso de computação", 10, 5),
+//                    Course("Ciência da Computação", "Curso de computação", 10, 5),
+//                    Course("Engenharia de Software", "Curso de computação", 10, 5),
+//                    Course("Direito", "Curso de computação", 10, 5),
+//                    Course("Biologia", "Curso de computação", 10, 5),
+//                    Course("Medicina", "Curso de computação", 10, 5),
+//                    Course("Ciência da Computação", "Curso de computação", 10, 5),
+//                    Course("Engenharia de Software", "Curso de computação", 10, 5),
                 )
             ), isDatagridItemSelectable = true
         )

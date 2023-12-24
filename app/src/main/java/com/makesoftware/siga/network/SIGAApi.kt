@@ -2,6 +2,7 @@ package com.makesoftware.siga.network
 
 import com.makesoftware.siga.data.Course
 import com.makesoftware.siga.data.Student
+import com.makesoftware.siga.data.StudentDTO
 import com.makesoftware.siga.data.Subject
 import com.makesoftware.siga.data.Teacher
 import com.makesoftware.siga.data.User
@@ -28,7 +29,7 @@ interface SIGAApi {
     suspend fun postUser(@Body user: User): User
 
     @POST("${EndpointPrefixes.USER}/{id}/${EndpointPrefixes.STUDENT}")
-    suspend fun postStudent(@Path("id") userId: Long, @Body student: Student)
+    suspend fun postStudent(@Path("id") userId: Long, @Body student: StudentDTO)
 
     @GET(EndpointPrefixes.SUBJECT)
     suspend fun fetchSubjects(): List<Subject>

@@ -56,6 +56,7 @@ fun AdminFormScreen(
 
         DefaultElevatedButton(
             onClick = {
+                // TODO: Change this pair for a sealed class, for more readability and flexibility.
                 val result = when (formState) {
                     FormState.Save -> saveEntity()
                     FormState.Update -> updateEntity()
@@ -63,7 +64,7 @@ fun AdminFormScreen(
                 }
 
                 // TODO: If the operation fails, don't transition to the next state and show a Toast.
-                formState = changeFormState
+//                formState = changeFormState
 
             }, text = buttonText, modifier = Modifier.padding(bottom = 15.dp)
         )
