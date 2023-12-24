@@ -63,7 +63,7 @@ fun AdminStudentForm(
         FormSelectableDataGrid(
             infoText = "Disciplinas",
             onSelectRequest = onSelectSubjectsRequest,
-            numberOfSelectedItems = 10,
+            numberOfSelectedItems = student.subjects.size,
             modifier = Modifier.padding(top = 30.dp)
         )
     }

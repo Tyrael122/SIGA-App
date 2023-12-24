@@ -10,19 +10,28 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class SelectionViewModel<T>(
-    fetchResult: FetchResult<T>
+    previouslySelectedItems: List<T>,
+    fetchedItems: List<T>
 ) : ViewModel() {
 
-    private val _uiState =
-        MutableStateFlow(SelectableUiState(fetchedItems = fetchResult.getSucessItemsOrEmptyList()))
+    private val _uiState = MutableStateFlow(SelectableUiState(fetchedItems = fetchedItems))
     val uiState = _uiState.asStateFlow()
 
-    private val fetchedItems: List<T> = fetchResult.getSucessItemsOrEmptyList()
+    private val fetchedItems: List<T>
+        get() {
+            return _uiState.value.fetchedItems
+        }
+
+//    private var fetchResult: FetchResult<T>? = null
 
     private val selectedItems: List<T>
         get() {
             return _uiState.value.selectedItems
         }
+
+    init {
+        updateSelectionUiState(previouslySelectedItems)
+    }
 
     fun toggleItemSelection(item: T) {
         updateSelectionUiState(
@@ -55,18 +64,35 @@ class SelectionViewModel<T>(
     }
 
     private fun isAllItemsSelected(): Boolean {
+//        if (fetchResult == null) {
+//            throw Exception("Fetch result is null. Did you forget to set the fetched items?")
+//        }
+
+        if (fetchedItems.isEmpty()) {
+            return false
+        }
+
         return selectedItems.size == fetchedItems.size
+    }
+
+    fun setFetchedItemsByFetchResult(fetchResult: FetchResult<T>) {
+//        this.fetchResult = fetchResult
+
+        val newFetchedItems = fetchResult.getSucessItemsOrEmptyList()
+
+        _uiState.update {
+            it.copy(fetchedItems = newFetchedItems)
+        }
     }
 
     companion object {
         fun <T> Factory(
-            fetchResult: FetchResult<T>
+            selectedItems: List<T>,
+            fetchedItems: List<T>
         ): ViewModelProvider.Factory {
             return viewModelFactory {
                 initializer {
-                    SelectionViewModel(
-                        fetchResult
-                    )
+                    SelectionViewModel(selectedItems, fetchedItems)
                 }
             }
         }
@@ -76,5 +102,5 @@ class SelectionViewModel<T>(
 data class SelectableUiState<T>(
     val selectedItems: List<T> = emptyList(),
     val isAllItemsSelected: Boolean = false,
-    val fetchedItems: List<T>
+    val fetchedItems: List<T> = emptyList(),
 )

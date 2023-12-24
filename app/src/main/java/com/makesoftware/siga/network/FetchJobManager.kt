@@ -17,7 +17,7 @@ class FetchJobManager {
         updateFetchResult: (FetchResult<T>) -> Unit,
         fetchData: suspend () -> List<T>,
         context: Context
-    ) {
+    ) { // TODO: Make this function return a fetchResult.
         fetchJob?.cancel("Restarting fetch job")
 
 

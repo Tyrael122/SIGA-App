@@ -72,6 +72,7 @@ fun <T : DataGridView> DataGrid(
     fetchData: () -> Unit,
     fetchResult: FetchResult<T>,
     isDatagridItemSelectable: Boolean = false,
+    selectedItems: List<T> = emptyList(),
     onCommitSelection: (List<T>) -> Unit = {},
     onSelectItem: (T) -> Unit = {},
 ) {
@@ -84,7 +85,12 @@ fun <T : DataGridView> DataGrid(
             .padding(top = 12.dp)
     ) {
         val selectionViewModel: SelectionViewModel<T> =
-            viewModel(factory = SelectionViewModel.Factory(fetchResult))
+            viewModel(factory = SelectionViewModel.Factory(selectedItems, fetchResult.getSucessItemsOrEmptyList()))
+
+        // TODO: This is a workaround. Fix this. Find a way not to pass the fetchResult to the view model through this set method.
+        //  The problem is that the view model is not recomposing when the fetchResult changes.
+        selectionViewModel.setFetchedItemsByFetchResult(fetchResult)
+
         val uiState by selectionViewModel.uiState.collectAsState()
 
         DataGridHeader(columns = columns,
@@ -102,7 +108,9 @@ fun <T : DataGridView> DataGrid(
                 onSelectItem(it)
             },
             isDatagridItemSelectable = isDatagridItemSelectable,
-            isItemSelected = { uiState.selectedItems.contains(it) },
+            isItemSelected = {
+                uiState.selectedItems.contains(it)
+             },
             modifier = Modifier.weight(1F)
         )
 
@@ -195,13 +203,16 @@ private fun <V : DataGridView> ItemGrid(
     })
 
     Box(
-        modifier.pullRefresh(pullRefreshState)
+        modifier
+            .fillMaxWidth()
+            .pullRefresh(pullRefreshState)
     ) {
         when (fetchResult) {
             is FetchResult.Error -> {
                 DataGridErrorIndicator(
                     error = fetchResult,
                     modifier = Modifier
+                        .fillMaxSize()
                         .align(Alignment.Center)
                         .verticalScroll(rememberScrollState())
                 )
@@ -222,7 +233,9 @@ private fun <V : DataGridView> ItemGrid(
             else -> {} // Do nothing here. The pull refresh indicator should be shown.
         }
 
-        PullRefreshIndicator(isLoading, pullRefreshState, Modifier.align(Alignment.TopCenter))
+        PullRefreshIndicator(
+            isLoading, pullRefreshState, Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 
@@ -251,7 +264,7 @@ private fun LazyItemGrid(
     isDataGridItemSelectable: Boolean,
 ) {
     LazyColumn(
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     ) {
 
         if (items.isEmpty()) {

@@ -122,7 +122,8 @@ fun NavGraphBuilder.studentScreens(
             },
             isUpdate = studentUiState.isEntityBeingUpdated,
             onSelectSubjectsRequest = {
-                subjectsViewModel.setOnCommitSelection {
+                // TODO: Maybe create a callback builder, and a way to create a custom callback if necessary. Wait for three repetitions to refactor this.
+                subjectsViewModel.setViewAsSelectableWithCallback {
                     navController.navigate(AdminRoutes.STUDENT_FORM)
 
                     viewModel.updateSelectedEntity(
@@ -131,6 +132,8 @@ fun NavGraphBuilder.studentScreens(
                         )
                     )
                 }
+
+                subjectsViewModel.updateSelectedEntities(studentUiState.selectedEntity.subjects)
 
                 navController.navigate(AdminRoutes.SUBJECTS)
             },

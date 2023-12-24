@@ -31,18 +31,21 @@ fun <T : DataGridView> AdminDataViewScreen(
     fetchItems: () -> Unit,
     fetchResult: FetchResult<T>,
     isViewSelectable: Boolean = false,
+    selectedItems: List<T> = emptyList(),
     onCommitSelection: (List<T>) -> Unit = {},
     onSelectItem: (T) -> Unit = {},
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddEntityRequest,
-                containerColor = MaterialTheme.colorScheme.primary,
-                shape = CircleShape,
-                modifier = Modifier.padding(end = 16.dp, bottom = 16.dp)
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = null)
+            if (!isViewSelectable) {
+                FloatingActionButton(
+                    onClick = onAddEntityRequest,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    shape = CircleShape,
+                    modifier = Modifier.padding(end = 16.dp, bottom = 16.dp)
+                ) {
+                    Icon(Icons.Filled.Add, contentDescription = null)
+                }
             }
         }, modifier = modifier
     ) {
@@ -50,12 +53,13 @@ fun <T : DataGridView> AdminDataViewScreen(
             modifier = Modifier
                 .padding(it)
                 .padding(horizontal = 15.dp)
-                .padding(top = 30.dp, bottom = 15.dp),
+                .padding(top = 20.dp, bottom = 15.dp),
             onItemClick = onItemClick,
             fetchResult = fetchResult,
             columns = columns,
             fetchData = fetchItems,
             isDatagridItemSelectable = isViewSelectable,
+            selectedItems = selectedItems,
             onCommitSelection = onCommitSelection,
             onSelectItem = onSelectItem,
         )
@@ -84,6 +88,7 @@ fun <T : DataGridView> AdminDataViewScreenWrapper(
         fetchItems = { viewModel.fetchAllEntities(context) },
         fetchResult = uiState.fetchResult,
         isViewSelectable = selectableUiState.isViewSelectable,
+        selectedItems = selectableUiState.selectedEntities,
         onCommitSelection = {
             viewModel.clearSelectableState()
             selectableUiState.onCommitSelection(it)
