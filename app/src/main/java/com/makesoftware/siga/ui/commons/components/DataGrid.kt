@@ -37,6 +37,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,10 +52,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.makesoftware.siga.data.Course
 import com.makesoftware.siga.data.DataGridView
 import com.makesoftware.siga.network.ErrorType
 import com.makesoftware.siga.network.FetchResult
+import com.makesoftware.siga.ui.commons.viewmodels.SelectionViewModel
 import com.makesoftware.siga.ui.theme.AlternativeColorScheme
 import com.makesoftware.siga.ui.theme.DataGridTypograhpy
 import com.makesoftware.siga.ui.theme.SIGATheme
@@ -80,64 +83,60 @@ fun <T : DataGridView> DataGrid(
             .background(backgroundColor)
             .padding(top = 12.dp)
     ) {
-        var selectedItems by remember { mutableStateOf(listOf<T>()) }
+        val selectionViewModel: SelectionViewModel<T> =
+            viewModel(factory = SelectionViewModel.Factory(fetchResult))
+        val uiState by selectionViewModel.uiState.collectAsState()
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            modifier = Modifier.padding(horizontal = 12.dp)
-        ) {
-            SearchBar()
+        DataGridHeader(columns = columns,
+            isAllItemsSelected = uiState.isAllItemsSelected,
+            isDataGridItemSelectable = isDatagridItemSelectable,
+            selectAllItems = { selectionViewModel.selectAllItems() })
 
-            val items = if (fetchResult is FetchResult.Success) {
-                fetchResult.items
-            } else {
-                emptyList()
-            }
-
-            DataGridHeader(
-                modifier = Modifier.heightIn(min = 45.dp),
-                selectAllItems = {
-                    // TODO: Refactor this urgently!!
-                    selectedItems = if (selectedItems.size == items.size) {
-                        emptyList()
-                    } else {
-                        items
-                    }
-                },
-                isAllItemsSelected = { selectedItems.size == items.size },
-                isDataGridItemSelectable = isDatagridItemSelectable,
-                columns = columns,
-            )
-        }
-
-        // TODO: Refactor the selection logic of the datagrid, especially the parameters I'm constantly passing (isDataGridItemSelectable).
         ItemGrid(
             onItemClick = onItemClick,
             fetchData = fetchData,
             columns = columns,
             fetchResult = fetchResult,
             onSelectItem = {
-                // TODO: Refactor this function.
-                selectedItems = if (selectedItems.contains(it)) {
-                    selectedItems.minus(it)
-                } else {
-                    selectedItems.plus(it)
-                }
-
+                selectionViewModel.toggleItemSelection(it)
                 onSelectItem(it)
             },
             isDatagridItemSelectable = isDatagridItemSelectable,
-            isItemSelected = { selectedItems.contains(it) },
+            isItemSelected = { uiState.selectedItems.contains(it) },
             modifier = Modifier.weight(1F)
         )
 
-        if (isDatagridItemSelectable) {
+        if (isDatagridItemSelectable && onCommitSelection != {}) {
             DefaultElevatedButton(
-                onClick = { onCommitSelection(selectedItems) },
+                onClick = { onCommitSelection(uiState.selectedItems) },
                 text = "Salvar",
                 modifier = Modifier.padding(vertical = 20.dp)
             )
         }
+    }
+}
+
+@Composable
+private fun DataGridHeader(
+    modifier: Modifier = Modifier,
+    columns: List<DataGridColumnProperties>,
+    selectAllItems: () -> Unit,
+    isAllItemsSelected: Boolean,
+    isDataGridItemSelectable: Boolean
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+        modifier = modifier.padding(horizontal = 12.dp)
+    ) {
+        SearchBar()
+
+        DataGridColumnHeader(
+            modifier = Modifier.heightIn(min = 45.dp),
+            selectAllItems = selectAllItems,
+            isAllItemsSelected = isAllItemsSelected,
+            isDataGridItemSelectable = isDataGridItemSelectable,
+            columns = columns,
+        )
     }
 }
 
@@ -158,12 +157,12 @@ private fun SearchBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun DataGridHeader(
+private fun DataGridColumnHeader(
     modifier: Modifier = Modifier,
     selectAllItems: () -> Unit,
     columns: List<DataGridColumnProperties>,
     isDataGridItemSelectable: Boolean,
-    isAllItemsSelected: () -> Boolean,
+    isAllItemsSelected: Boolean,
 ) {
     DataGridRow(
         columnContentMap = columns.associateWith { it.name },
@@ -171,7 +170,7 @@ private fun DataGridHeader(
         textColor = MaterialTheme.colorScheme.onSurface,
         isSelectable = isDataGridItemSelectable,
         onSelect = selectAllItems,
-        isItemSelected = isAllItemsSelected(),
+        isItemSelected = isAllItemsSelected,
         modifier = modifier,
     )
 }
@@ -228,7 +227,9 @@ private fun <V : DataGridView> ItemGrid(
 }
 
 @Composable
-private fun <T> DataGridErrorIndicator(modifier: Modifier = Modifier, error: FetchResult.Error<T>) {
+private fun <T> DataGridErrorIndicator(
+    modifier: Modifier = Modifier, error: FetchResult.Error<T>
+) {
     when (error.errorType) {
         ErrorType.NO_NETWORK -> NoInternetIndicator(modifier = modifier)
         ErrorType.UNKNOWN -> IconIndicator(

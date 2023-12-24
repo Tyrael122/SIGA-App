@@ -13,7 +13,6 @@ import com.makesoftware.siga.network.FetchJobManager
 import com.makesoftware.siga.network.FetchResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -22,7 +21,7 @@ class BasicCrudViewModel<T>(
     private val repository: BasicCrudRepository<T>, private val entityFactory: () -> T
 ) : ViewModel() {
 
-    private var _uiState = MutableStateFlow(UiState(selectedEntity = entityFactory()))
+    private val _uiState = MutableStateFlow(UiState(selectedEntity = entityFactory()))
     val uiState = _uiState.asStateFlow()
 
     private var _selectableUiState = MutableStateFlow(SelectableUiState<T>())
@@ -72,12 +71,6 @@ class BasicCrudViewModel<T>(
         }
     }
 
-    fun updateSelectedEntities(entities: List<T>) {
-        _selectableUiState.update {
-            it.copy(selectedEntities = entities)
-        }
-    }
-
     fun clearFormState() {
         _uiState.update {
             it.copy(selectedEntity = entityFactory(), isEntityBeingUpdated = false)
@@ -105,13 +98,6 @@ class BasicCrudViewModel<T>(
             Toast.makeText(context, "Salvo com sucesso.", Toast.LENGTH_SHORT).show()
 
             clearFormState()
-        }
-    }
-
-    fun getFetchResultSucessItemsOrEmptyList(): List<T> {
-        return when (val fetchResult = _uiState.value.fetchResult) {
-            is FetchResult.Success -> fetchResult.items
-            else -> emptyList()
         }
     }
 

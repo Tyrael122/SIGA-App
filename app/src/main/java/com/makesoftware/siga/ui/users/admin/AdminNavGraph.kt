@@ -105,6 +105,8 @@ fun NavGraphBuilder.studentScreens(
 
     composable(AdminRoutes.STUDENT_FORM) {
         val studentUiState by viewModel.uiState.collectAsState()
+        val courseUiState by courseViewModel.uiState.collectAsState()
+
         val context = LocalContext.current
 
         AdminStudentForm(
@@ -132,7 +134,7 @@ fun NavGraphBuilder.studentScreens(
 
                 navController.navigate(AdminRoutes.SUBJECTS)
             },
-            courses = courseViewModel.getFetchResultSucessItemsOrEmptyList(),
+            courses = courseUiState.fetchResult.getSucessItemsOrEmptyList(),
         )
     }
 }

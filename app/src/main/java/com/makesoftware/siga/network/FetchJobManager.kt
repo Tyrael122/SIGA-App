@@ -90,6 +90,13 @@ sealed class FetchResult<out T> {
     data class Success<T>(val items: List<T> = listOf()) : FetchResult<T>()
     data class Loading<T>(val message: String = "") : FetchResult<T>()
     data class Error<T>(val errorType: ErrorType, val message: String) : FetchResult<T>()
+
+    fun getSucessItemsOrEmptyList(): List<T> {
+        return when (this) {
+            is Success -> this.items
+            else -> emptyList()
+        }
+    }
 }
 
 enum class ErrorType {
