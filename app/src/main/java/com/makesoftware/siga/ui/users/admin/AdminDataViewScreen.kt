@@ -85,7 +85,7 @@ fun <T : DataGridView> AdminDataViewScreenWrapper(
             viewModel.clearFormState()
             navigateToFormScreen()
         },
-        fetchItems = { viewModel.fetchAllEntities(context) },
+        fetchItems = { viewModel.fetchAllEntities() },
         fetchResult = uiState.fetchResult,
         isViewSelectable = selectableUiState.isViewSelectable,
         selectedItems = selectableUiState.selectedEntities,

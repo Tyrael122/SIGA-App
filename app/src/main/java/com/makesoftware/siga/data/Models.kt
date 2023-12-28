@@ -34,6 +34,7 @@ data class Course(
     val description: String = "",
     val numberOfSemesters: Int = 0,
     val maxNumbersOfSemestersToFinish: Int = 0,
+    val subjects: List<Subject> = emptyList(),
 ) : DataGridView {
 
     override fun toDataGridView(): DataGridRowContent {
@@ -51,6 +52,16 @@ data class Course(
         )
     }
 }
+
+@Serializable
+data class CourseDTO(
+    val id: Long = 0,
+    val name: String = "",
+    val description: String = "",
+    val numberOfSemesters: Int = 0,
+    val maxNumbersOfSemestersToFinish: Int = 0,
+    val subjectIds: List<Long> = emptyList(),
+)
 
 @Serializable
 data class Student(

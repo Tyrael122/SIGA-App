@@ -1,6 +1,7 @@
 package com.makesoftware.siga.network
 
 import com.makesoftware.siga.data.Course
+import com.makesoftware.siga.data.CourseDTO
 import com.makesoftware.siga.data.Student
 import com.makesoftware.siga.data.StudentDTO
 import com.makesoftware.siga.data.Subject
@@ -38,5 +39,5 @@ interface SIGAApi {
     suspend fun postSubject(@Body subject: Subject)
 
     @POST(EndpointPrefixes.COURSE)
-    suspend fun postCourse(@Body entity: Course)
+    suspend fun postCourse(@Body entity: CourseDTO)
 }

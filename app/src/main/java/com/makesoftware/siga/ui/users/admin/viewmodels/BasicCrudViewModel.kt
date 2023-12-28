@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.makesoftware.siga.data.repositories.BasicCrudRepository
 import com.makesoftware.siga.network.FetchJobManager
 import com.makesoftware.siga.network.FetchResult
+import com.makesoftware.siga.network.NetworkManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -18,7 +19,9 @@ import kotlinx.coroutines.launch
 
 
 class BasicCrudViewModel<T>(
-    private val repository: BasicCrudRepository<T>, private val entityFactory: () -> T
+    private val repository: BasicCrudRepository<T>,
+    private val entityFactory: () -> T,
+    networkManager: NetworkManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState(selectedEntity = entityFactory()))
@@ -27,13 +30,11 @@ class BasicCrudViewModel<T>(
     private var _selectableUiState = MutableStateFlow(SelectableUiState<T>())
     val selectableUiState = _selectableUiState.asStateFlow()
 
-    private val fetchJobManager = FetchJobManager()
+    private val fetchJobManager = FetchJobManager(networkManager)
 
-    // TODO: Make a NetworkManager class to handle network stuff, and use DI to inject it into the view model.
-    //  This will allow us to call the fetchAllEntities method without passing context. Don't pass context to viewmodel.
-//    init {
-//        fetchAllEntities(context)
-//    }
+    init {
+        fetchAllEntities()
+    }
 
     fun selectEntityForUpdate(entity: T) {
         _uiState.update {
@@ -41,15 +42,15 @@ class BasicCrudViewModel<T>(
         }
     }
 
-    fun fetchAllEntities(context: Context) {
+    fun fetchAllEntities() {
         viewModelScope.launch {
             fetchJobManager.doFetchJob(updateFetchResult = { fetchResult ->
                 _uiState.update {
                     it.copy(fetchResult = fetchResult)
                 }
-            }, fetchData = {
+            }) {
                 repository.fetchAll()
-            }, context = context)
+            }
         }
     }
 
@@ -57,6 +58,29 @@ class BasicCrudViewModel<T>(
         _uiState.update {
             it.copy(selectedEntity = entity)
         }
+    }
+
+    fun setViewAsSelectableWithCallbackBuilder(
+        initialSelectedEntities: List<T>,
+        navigateToPreviousScreen: () -> Unit,
+        navigateToSelectionScreen: () -> Unit,
+        updateEntitySelection: (List<T>) -> Unit
+    ) {
+        _selectableUiState.update {
+            it.copy(
+                selectedEntities = initialSelectedEntities,
+            )
+        }
+
+        _selectableUiState.update {
+            it.copy(onCommitSelection = { selectedEntities ->
+                navigateToPreviousScreen()
+                updateEntitySelection(selectedEntities)
+
+            }, isViewSelectable = true)
+        }
+
+        navigateToSelectionScreen()
     }
 
     fun setViewAsSelectableWithCallback(
@@ -113,12 +137,14 @@ class BasicCrudViewModel<T>(
 
     companion object {
         fun <T> Factory(
-            repository: BasicCrudRepository<T>, entityFactory: () -> T
+            repository: BasicCrudRepository<T>,
+            networkManager: NetworkManager,
+            entityFactory: () -> T,
         ): ViewModelProvider.Factory {
             return viewModelFactory {
                 initializer {
                     BasicCrudViewModel(
-                        repository, entityFactory
+                        repository, entityFactory, networkManager
                     )
                 }
             }

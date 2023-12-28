@@ -1,27 +1,22 @@
 package com.makesoftware.siga.network
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.util.Log
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
-class FetchJobManager {
+class FetchJobManager(private val networkManager: NetworkManager) {
 
     private var fetchJob: Job? = null
 
     suspend fun <T> doFetchJob(
         updateFetchResult: (FetchResult<T>) -> Unit,
-        fetchData: suspend () -> List<T>,
-        context: Context
+        fetchData: suspend () -> List<T>
     ) { // TODO: Make this function return a fetchResult.
         fetchJob?.cancel("Restarting fetch job")
 
-
-        if (!arePrerequisitesMet(updateFetchResult, context)) {
+        if (!arePrerequisitesMet(updateFetchResult)) {
             return
         }
 
@@ -50,9 +45,9 @@ class FetchJobManager {
     }
 
     private fun <K> arePrerequisitesMet(
-        updateFetchResult: (FetchResult<K>) -> Unit, context: Context
+        updateFetchResult: (FetchResult<K>) -> Unit
     ): Boolean {
-        if (!hasNetworkConnection(context)) {
+        if (!networkManager.hasNetworkConnection()) {
             Log.d("FetchJobManager", "No network connection.")
             updateFetchResult(
                 FetchResult.Error(
@@ -63,24 +58,6 @@ class FetchJobManager {
         }
 
         return true
-    }
-
-    private fun hasNetworkConnection(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        val networkCapabilities =
-            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-                ?: return false
-
-        if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) && networkCapabilities.hasCapability(
-                NetworkCapabilities.NET_CAPABILITY_VALIDATED
-            )
-        ) {
-            return true
-        }
-
-        return false
     }
 }
 

@@ -1,6 +1,7 @@
 package com.makesoftware.siga.data.repositories
 
 import com.makesoftware.siga.data.Course
+import com.makesoftware.siga.data.CourseDTO
 import com.makesoftware.siga.data.datasources.RemoteDataSource
 
 class CoursesRepository(
@@ -12,6 +13,17 @@ class CoursesRepository(
     }
 
     override suspend fun save(entity: Course) {
-        remoteDataSource.postCourse(entity)
+        val courseDto = convertCourseToDto(entity)
+
+        remoteDataSource.postCourse(courseDto)
     }
+
+    private fun convertCourseToDto(entity: Course) = CourseDTO(
+        id = entity.id,
+        name = entity.name,
+        description = entity.description,
+        numberOfSemesters = entity.numberOfSemesters,
+        maxNumbersOfSemestersToFinish = entity.maxNumbersOfSemestersToFinish,
+        subjectIds = entity.subjects.map { it.id }
+    )
 }

@@ -2,6 +2,7 @@ package com.makesoftware.siga.data.datasources
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.makesoftware.siga.data.Course
+import com.makesoftware.siga.data.CourseDTO
 import com.makesoftware.siga.data.Student
 import com.makesoftware.siga.data.StudentDTO
 import com.makesoftware.siga.data.Subject
@@ -84,7 +85,7 @@ class RemoteDataSource(
         }
     }
 
-    suspend fun postCourse(entity: Course) {
+    suspend fun postCourse(entity: CourseDTO) {
         withContext(ioDispatcher) {
             retrofitService.postCourse(entity)
         }

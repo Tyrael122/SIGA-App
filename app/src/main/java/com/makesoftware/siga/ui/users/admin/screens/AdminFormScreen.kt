@@ -52,7 +52,7 @@ fun AdminFormScreen(
             FormState.Update -> updateButtonText
         }
 
-        val changeFormState = generateNextFormState(formState)
+        val nextFormState = generateNextFormState(formState)
 
         DefaultElevatedButton(
             onClick = {
@@ -63,8 +63,8 @@ fun AdminFormScreen(
                     else -> {}
                 }
 
-                // TODO: If the operation fails, don't transition to the next state and show a Toast.
-//                formState = changeFormState
+                // TODO: If the operation fails, don't transition to the next state.
+                formState = nextFormState
 
             }, text = buttonText, modifier = Modifier.padding(bottom = 15.dp)
         )

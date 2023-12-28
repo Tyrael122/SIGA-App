@@ -23,6 +23,7 @@ import com.makesoftware.siga.data.repositories.CoursesRepository
 import com.makesoftware.siga.data.repositories.StudentsRepository
 import com.makesoftware.siga.data.repositories.SubjectRepository
 import com.makesoftware.siga.data.repositories.TeachersRepository
+import com.makesoftware.siga.network.NetworkManager
 import com.makesoftware.siga.ui.users.admin.screens.AdminHomeScreen
 import com.makesoftware.siga.ui.users.admin.screens.forms.AdminCourseForm
 import com.makesoftware.siga.ui.users.admin.screens.forms.AdminStudentForm
@@ -51,25 +52,25 @@ fun AdminNavGraph(
 
     courseViewModel: BasicCrudViewModel<Course> = viewModel(
         factory = BasicCrudViewModel.Factory(
-            CoursesRepository(RemoteDataSource())
+            CoursesRepository(RemoteDataSource()), NetworkManager(LocalContext.current)
         ) { Course() }, key = "course"
     ),
 
     teacherViewModel: BasicCrudViewModel<Teacher> = viewModel(
         factory = BasicCrudViewModel.Factory(
-            TeachersRepository(RemoteDataSource())
+            TeachersRepository(RemoteDataSource()), NetworkManager(LocalContext.current)
         ) { Teacher() }, key = "teacher"
     ),
 
     studentViewModel: BasicCrudViewModel<Student> = viewModel(
         factory = BasicCrudViewModel.Factory(
-            StudentsRepository(RemoteDataSource())
+            StudentsRepository(RemoteDataSource()), NetworkManager(LocalContext.current)
         ) { Student() }, key = "student"
     ),
 
     subjectViewModel: BasicCrudViewModel<Subject> = viewModel(
         factory = BasicCrudViewModel.Factory(
-            SubjectRepository(RemoteDataSource())
+            SubjectRepository(RemoteDataSource()), NetworkManager(LocalContext.current)
         ) { Subject() }, key = "subject"
     )
 ) {
@@ -85,7 +86,7 @@ fun AdminNavGraph(
         }
 
         studentScreens(studentViewModel, subjectViewModel, courseViewModel, navController)
-        courseScreens(courseViewModel, navController)
+        courseScreens(courseViewModel, subjectViewModel, navController)
         teacherScreens(teacherViewModel, navController)
         subjectScreens(subjectViewModel, navController)
     }
@@ -109,8 +110,6 @@ fun NavGraphBuilder.studentScreens(
 
         val context = LocalContext.current
 
-        courseViewModel.fetchAllEntities(context)
-
         AdminStudentForm(
             student = studentUiState.selectedEntity,
             updateStudentData = {
@@ -124,7 +123,7 @@ fun NavGraphBuilder.studentScreens(
             },
             isUpdate = studentUiState.isEntityBeingUpdated,
             onSelectSubjectsRequest = {
-                // TODO: Maybe create a callback builder, and a way to create a custom callback if necessary. Wait for three repetitions to refactor this.
+                // TODO: Maybe improve this method to accept named parameters, and a way to create a custom callback if necessary. Wait for three repetitions to refactor this.
                 subjectsViewModel.setViewAsSelectableWithCallback(studentUiState.selectedEntity.enrolledSubjects) {
                     navController.navigate(AdminRoutes.STUDENT_FORM)
 
@@ -166,7 +165,9 @@ fun NavGraphBuilder.teacherScreens(
 }
 
 fun NavGraphBuilder.courseScreens(
-    viewModel: BasicCrudViewModel<Course>, navController: NavHostController
+    viewModel: BasicCrudViewModel<Course>,
+    subjectsViewModel: BasicCrudViewModel<Subject>,
+    navController: NavHostController
 ) {
     composable(AdminRoutes.COURSES) {
         AdminDataViewScreenWrapper(navigateToFormScreen = {
@@ -176,12 +177,28 @@ fun NavGraphBuilder.courseScreens(
 
     composable(AdminRoutes.COURSE_FORM) {
         val courseUiState by viewModel.uiState.collectAsState()
+        val subjectUiState by subjectsViewModel.uiState.collectAsState()
         val context = LocalContext.current
 
         AdminCourseForm(course = courseUiState.selectedEntity, updateCourseData = {
             viewModel.updateSelectedEntity(it)
         }, onSelectSubjectsRequest = {
-            // TODO: Navigate to the subjects screen, with the selectable option
+            subjectsViewModel.setViewAsSelectableWithCallbackBuilder(
+                courseUiState.selectedEntity.subjects,
+                navigateToPreviousScreen = {
+                    navController.navigate(AdminRoutes.COURSE_FORM)
+                },
+                navigateToSelectionScreen = {
+                    navController.navigate(AdminRoutes.SUBJECTS)
+                },
+                updateEntitySelection = {
+                    viewModel.updateSelectedEntity(
+                        courseUiState.selectedEntity.copy(
+                            subjects = it
+                        )
+                    )
+                }
+            )
         }, saveCourseUpdate = {
             viewModel.updateEntity()
         }, saveCourse = {
