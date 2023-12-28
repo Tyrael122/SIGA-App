@@ -48,11 +48,11 @@ fun AdminStudentForm(
             fieldDescription = "Semestre base",
         )
 
-        // TODO: This could be refactored to inside the FormDropdownMenu. But wait for another code repetition to do it.
-        var selectedOptionText by remember { mutableStateOf("") }
+        var selectedOptionText by remember { mutableStateOf(student.enrolledCourse.name) }
         FormDropdownMenu(
             options = courses.map { it.name },
             selectedOptionText = selectedOptionText,
+            // TODO: This could be refactored to inside the FormDropdownMenu. You could have the . But wait for another code repetition to do it.
             onSelectionChanged = {
                 val selectedCourse = courses.find { course -> course.name == it }
                 selectedCourse?.let { course ->

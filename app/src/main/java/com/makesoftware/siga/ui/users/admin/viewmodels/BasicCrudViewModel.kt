@@ -132,6 +132,7 @@ class BasicCrudViewModel<T>(
             Toast.makeText(context, "Salvo com sucesso.", Toast.LENGTH_SHORT).show()
 
             clearFormState()
+            fetchAllEntities()
         }
     }
 

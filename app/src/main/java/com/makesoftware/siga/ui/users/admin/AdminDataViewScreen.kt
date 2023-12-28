@@ -75,12 +75,14 @@ fun <T : DataGridView> AdminDataViewScreenWrapper(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val selectableUiState by viewModel.selectableUiState.collectAsState()
-    val context = LocalContext.current
 
     AdminDataViewScreen(
         modifier = modifier,
         columns = columns,
-        onItemClick = { viewModel.selectEntityForUpdate(it) },
+        onItemClick = {
+            viewModel.selectEntityForUpdate(it)
+            navigateToFormScreen()
+        },
         onAddEntityRequest = {
             viewModel.clearFormState()
             navigateToFormScreen()
