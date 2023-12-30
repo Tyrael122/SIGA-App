@@ -53,7 +53,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.makesoftware.siga.data.Course
 import com.makesoftware.siga.data.DataGridView
 import com.makesoftware.siga.network.ErrorType
 import com.makesoftware.siga.network.FetchResult

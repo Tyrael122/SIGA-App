@@ -166,8 +166,8 @@ fun FormDropdownMenu(
         containerColor = AlternativeColorScheme.secondary_color,
         unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
     ),
+    placeholder: @Composable (() -> Unit)? = null,
     textFieldShape: Shape = RoundedCornerShape(10.dp),
-    placeholder: @Composable (() -> Unit)?,
 ) {
     var expanded by remember { mutableStateOf(false) }
 

@@ -8,21 +8,21 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Teacher(
     val user: User = User(),
+    val graduationLevel: String = "",
     val urlCurriculoLattes: String = "",
 ) : DataGridView {
     override fun toDataGridView(): DataGridRowContent {
         return DataGridRowContent(
             listOf(
-                this.user.firstName
+                this.user.firstName, this.graduationLevel
             )
         )
     }
 
     companion object {
         val columns: List<DataGridColumnProperties> = listOf(
-            DataGridColumnProperties("Nome", 2F, TextAlign.Start),
-            DataGridColumnProperties("Nível", 1.5F, TextAlign.Center),
-            DataGridColumnProperties("Idade", 0.7F, TextAlign.Center),
+            DataGridColumnProperties("Nome", 1F, TextAlign.Start),
+            DataGridColumnProperties("Nível", 0.75F, TextAlign.Center),
         )
     }
 }
@@ -30,6 +30,7 @@ data class Teacher(
 @Serializable
 data class Course(
     val id: Long = 0,
+    val acronym: String = "",
     val name: String = "",
     val description: String = "",
     val numberOfSemesters: Int = 0,
@@ -40,7 +41,7 @@ data class Course(
     override fun toDataGridView(): DataGridRowContent {
         return DataGridRowContent(
             listOf(
-                this.name, this.description
+                this.name, this.acronym
             )
         )
     }
@@ -48,7 +49,7 @@ data class Course(
     companion object {
         val columns: List<DataGridColumnProperties> = listOf(
             DataGridColumnProperties("Nome", 1F, TextAlign.Start),
-            DataGridColumnProperties("Descrição", 1F, TextAlign.Start),
+            DataGridColumnProperties("Sigla", 0.5F, TextAlign.Center),
         )
     }
 }
@@ -57,6 +58,7 @@ data class Course(
 data class CourseDTO(
     val id: Long = 0,
     val name: String = "",
+    val acronym: String = "",
     val description: String = "",
     val numberOfSemesters: Int = 0,
     val maxNumbersOfSemestersToFinish: Int = 0,
@@ -74,7 +76,7 @@ data class Student(
     override fun toDataGridView(): DataGridRowContent {
         return DataGridRowContent(
             listOf(
-                this.user.firstName, this.enrolledCourse.name, this.courseSemester.toString()
+                this.user.firstName, this.enrolledCourse.acronym, this.courseSemester.toString()
             )
         )
     }

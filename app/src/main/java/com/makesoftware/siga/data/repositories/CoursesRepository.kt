@@ -21,6 +21,7 @@ class CoursesRepository(
     private fun convertCourseToDto(entity: Course) = CourseDTO(
         id = entity.id,
         name = entity.name,
+        acronym = entity.acronym,
         description = entity.description,
         numberOfSemesters = entity.numberOfSemesters,
         maxNumbersOfSemestersToFinish = entity.maxNumbersOfSemestersToFinish,

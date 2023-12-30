@@ -52,7 +52,9 @@ fun AdminStudentForm(
         FormDropdownMenu(
             options = courses.map { it.name },
             selectedOptionText = selectedOptionText,
-            // TODO: This could be refactored to inside the FormDropdownMenu. You could have the . But wait for another code repetition to do it.
+            // TODO: This could be refactored to inside the FormDropdownMenu.
+            //  You could have the onSelectionChange function return a object of type T, based on what you passed in the options param.
+            //  But wait for another code repetition to do it.
             onSelectionChanged = {
                 val selectedCourse = courses.find { course -> course.name == it }
                 selectedCourse?.let { course ->

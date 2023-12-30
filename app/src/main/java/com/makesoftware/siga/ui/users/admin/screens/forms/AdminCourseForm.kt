@@ -31,6 +31,12 @@ fun AdminCourseForm(
         )
 
         FormTextField(
+            value = course.acronym,
+            onValueChange = { updateCourseData(course.copy(acronym = it)) },
+            placeholderText = "Sigla"
+        )
+
+        FormTextField(
             value = course.description,
             onValueChange = { updateCourseData(course.copy(description = it)) },
             placeholderText = "Descrição",

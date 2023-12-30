@@ -177,14 +177,12 @@ fun NavGraphBuilder.courseScreens(
 
     composable(AdminRoutes.COURSE_FORM) {
         val courseUiState by viewModel.uiState.collectAsState()
-        val subjectUiState by subjectsViewModel.uiState.collectAsState()
         val context = LocalContext.current
 
         AdminCourseForm(course = courseUiState.selectedEntity, updateCourseData = {
             viewModel.updateSelectedEntity(it)
         }, onSelectSubjectsRequest = {
-            subjectsViewModel.setViewAsSelectableWithCallbackBuilder(
-                courseUiState.selectedEntity.subjects,
+            subjectsViewModel.setViewAsSelectableWithCallbackBuilder(courseUiState.selectedEntity.subjects,
                 navigateToPreviousScreen = {
                     navController.navigate(AdminRoutes.COURSE_FORM)
                 },
@@ -197,8 +195,7 @@ fun NavGraphBuilder.courseScreens(
                             subjects = it
                         )
                     )
-                }
-            )
+                })
         }, saveCourseUpdate = {
             viewModel.updateEntity()
         }, saveCourse = {
